@@ -9,7 +9,12 @@
       "email": "gerdchristian.kunze@googlemail.com"
     }
   ],
+  "config": {
+    "vendor-dir": "Vendor"
+  },
   "require": {
-    "php": ">=7.0"
+    "php": ">=7.0",
+    "twbs/bootstrap": "~v4.0.0-beta",
+    "doctrine/orm": "~v2.5"
   }
 }
