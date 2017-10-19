@@ -1,0 +1,15 @@
+{
+  "name": "precast-framework/precast-skeleton",
+  "description": "",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gerd Christian Kunze",
+      "email": "gerdchristian.kunze@googlemail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0"
+  }
+}
