@@ -1,20 +1,28 @@
 {
-  "name": "precast-framework/precast-skeleton",
-  "description": "",
-  "minimum-stability": "stable",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Gerd Christian Kunze",
-      "email": "gerdchristian.kunze@googlemail.com"
+    "name": "precast-framework/precast-skeleton",
+    "description": "",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gerd Christian Kunze",
+            "email": "gerdchristian.kunze@googlemail.com"
+        }
+    ],
+    "config": {
+        "vendor-dir": "Vendor/Repository"
+    },
+    "require": {
+        "php": ">=7.0",
+        "twbs/bootstrap": "~v4.0.0-beta",
+        "doctrine/orm": "~v2.5",
+        "twig/twig": "~v2.4",
+        "symfony/yaml": "~v3.3",
+        "laravel/framework": "~v5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vendor\\": "Vendor"
+        }
     }
-  ],
-  "config": {
-    "vendor-dir": "Vendor"
-  },
-  "require": {
-    "php": ">=7.0",
-    "twbs/bootstrap": "~v4.0.0-beta",
-    "doctrine/orm": "~v2.5"
-  }
 }
