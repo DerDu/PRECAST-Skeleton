@@ -1,0 +1,6 @@
+NamePlaceHolder:
+    Adapter: Doctrine
+    Host: localhost
+    User: null
+    Password: null
+    Port: null
