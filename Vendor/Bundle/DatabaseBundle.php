@@ -22,7 +22,7 @@ class DatabaseBundle extends AbstractBundle
     public function __construct(SettingBundle $SettingBundle, $Connection = 'Memory')
     {
         print __METHOD__ . PHP_EOL;
-        /** @var DatabaseInterface $Adapter */
+        /** @var SettingInterface $Adapter */
         $Adapter = $SettingBundle->getAdapter();
         $Setting = $Adapter->getValue( $Connection );
         if( isset( $Setting['Adapter'] ) ) {

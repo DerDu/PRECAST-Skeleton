@@ -12,6 +12,9 @@ use Vendor\Bundle\TemplateInterface;
  */
 class TwigAdapter extends AbstractAdapter implements TemplateInterface
 {
+    /** @var array $Variable */
+    private $Variable = [];
+
     /**
      * @return AdapterInterface
      */
@@ -28,6 +31,10 @@ class TwigAdapter extends AbstractAdapter implements TemplateInterface
     public function loadFile($FileLocation): TemplateInterface
     {
         print __METHOD__ . PHP_EOL;
+        $Environment = new \Twig_Environment(
+            new \Twig_Loader_Filesystem(dirname($FileLocation))
+        );
+        $this->setRawVendor( $Environment->load(basename($FileLocation)) );
         return $this;
     }
 
@@ -38,7 +45,15 @@ class TwigAdapter extends AbstractAdapter implements TemplateInterface
      */
     public function setVariable($Identifier, $Value): TemplateInterface
     {
+        $this->Variable[$Identifier] = $Value;
+        return $this;
     }
 
-
+    /**
+     * @return string
+     */
+    public function renderTemplate()
+    {
+        return $this->getRawVendor()->render( $this->Variable );
+    }
 }

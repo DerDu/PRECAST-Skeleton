@@ -3,6 +3,7 @@
 use Configuration\Environment;
 use Vendor\Adapter\DoctrineAdapter;
 use Vendor\Adapter\YamlAdapter;
+use Vendor\Bundle\CacheBundle;
 use Vendor\Bundle\DatabaseBundle;
 use Vendor\Bundle\SettingBundle;
 use Vendor\Bundle\TemplateBundle;
@@ -14,19 +15,31 @@ require_once __DIR__ . DIRECTORY_SEPARATOR
     . 'Repository' . DIRECTORY_SEPARATOR
     . 'autoload.php';
 
-//var_dump((new DatabaseFactory(new DoctrineAdapter()))->getAdapter());
-//var_dump((new TemplateFactory(new YamlAdapter()))->getAdapter());
+\Vendor\AbstractFactory::setUseMockUp(false);
 
-\Vendor\AbstractFactory::setUseMockUp(true);
-
-$File = 'Template/Test.twig';
+$File = __DIR__.'/Template/Test.twig';
 $Template = (new TemplateBundle( $File ));
+/** @var \Vendor\Adapter\TwigAdapter $Adapter */
+$Adapter = $Template->getAdapter();
+var_dump( $Adapter->renderTemplate() );
 
 print PHP_EOL;
 
 $File = 'Database.yml';
 $Database = (new DatabaseBundle( Environment::getSettingBundle( $File ), 'NamePlaceHolder' ));
-var_dump( $Database );
+/** @var \Vendor\Adapter\DoctrineAdapter $Adapter */
+$Adapter = $Database->getAdapter();
+var_dump( $Adapter->connectDatabase() );
+
+print PHP_EOL;
+
+$File = 'Cache.yml';
+$Database = (new CacheBundle( Environment::getSettingBundle( $File ), 'NamePlaceHolder' ));
+/** @var \Vendor\Adapter\PhpFastCacheAdapter $Adapter */
+$Adapter = $Database->getAdapter();
+var_dump( $Adapter->setValue( 'TestKey', 'TestValue', 'TestRegion' ) );
+var_dump( $Adapter->getValue( 'TestKey', 'TestRegion' ) );
+
 ///** @var YamlAdapter $Adapter */
 //var_dump( $Adapter = (new SettingBundle( $File ))->getAdapter() );
 //
