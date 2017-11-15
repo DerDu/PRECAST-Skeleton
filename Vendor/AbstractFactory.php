@@ -2,51 +2,33 @@
 
 namespace Vendor;
 
+use Vendor\Contract\AdapterInterface;
+use Vendor\Contract\FactoryInterface;
+
 /**
  * Class AbstractFactory
- * @package Vendor
+ * @package Vendor\Factory
  */
-abstract class AbstractFactory implements FactoryInterface
+class AbstractFactory implements FactoryInterface
 {
-    /** @var bool $useMockUp */
-    private static $useMockUp = false;
-    /**
-     * @var AdapterInterface
-     */
-    private $Adapter;
+    /** @var null|AdapterInterface $Adapter */
+    private $Adapter = null;
 
     /**
-     * AbstractFactory constructor.
      * @param AdapterInterface $Adapter
+     * @return FactoryInterface
      */
-    public function __construct(AdapterInterface $Adapter)
+    public function useAdapter(AdapterInterface $Adapter) : FactoryInterface
     {
-        print __METHOD__ . PHP_EOL;
-        $this->Adapter = $Adapter->createAdapter();
+        $this->Adapter = $Adapter;
+        return $this;
     }
 
     /**
-     * @return bool
+     * @return null|AdapterInterface
      */
-    public static function isUseMockUp(): bool
+    protected function getAdapter()
     {
-        return self::$useMockUp;
-    }
-
-    /**
-     * @return AdapterInterface
-     */
-    public function getAdapter(): AdapterInterface
-    {
-        print __METHOD__ . PHP_EOL;
         return $this->Adapter;
-    }
-
-    /**
-     * @param bool $useMockUp
-     */
-    public static function setUseMockUp(bool $useMockUp)
-    {
-        self::$useMockUp = $useMockUp;
     }
 }

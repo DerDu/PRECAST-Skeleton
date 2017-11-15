@@ -17,6 +17,7 @@
         "twbs/bootstrap": "~v4.0.0-beta",
         "doctrine/orm": "~v2.5",
         "twig/twig": "~v2.4",
+        "symfony/finder": "~v3.3",
         "symfony/yaml": "~v3.3",
         "laravel/framework": "~v5.5",
         "phpfastcache/phpfastcache": "~6.0"
