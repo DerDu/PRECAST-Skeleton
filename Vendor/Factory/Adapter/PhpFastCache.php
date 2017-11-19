@@ -2,7 +2,6 @@
 
 namespace PRECAST\Vendor\Factory\Adapter;
 
-use phpFastCache\CacheManager;
 use phpFastCache\Helper\Psr16Adapter;
 use PRECAST\Vendor\Factory\AbstractAdapter;
 use PRECAST\Vendor\Factory\Contract\CacheInterface;
@@ -22,8 +21,8 @@ class PhpFastCache extends AbstractAdapter implements CacheInterface
      */
     public function setValue($Key, $Value, $Timeout = null, $Region = ''): CacheInterface
     {
-        $Cache = new Psr16Adapter('zendshm');
-        $Cache->set( crc32($Region).'-'.crc32($Key), $Value, $Timeout );
+        $Cache = new Psr16Adapter('files', ['ignoreSymfonyNotice' => true]);
+        $Cache->set(crc32($Region) . '-' . crc32($Key), $Value, $Timeout);
         return $this;
     }
 
@@ -34,7 +33,7 @@ class PhpFastCache extends AbstractAdapter implements CacheInterface
      */
     public function getValue($Key, $Region = '')
     {
-        $Cache = new Psr16Adapter('zendshm');
-        return $Cache->get( crc32($Region).'-'.crc32($Key), null );
+        $Cache = new Psr16Adapter('files', ['ignoreSymfonyNotice' => true]);
+        return $Cache->get(crc32($Region) . '-' . crc32($Key), null);
     }
 }

@@ -25,4 +25,12 @@ class Cache extends AbstractPackage implements PackageInterface
         $this->defineInterface(CacheInterface::class);
         parent::__construct();
     }
+
+    /**
+     * @return null|CacheInterface
+     */
+    public function getPackage() : CacheInterface
+    {
+        return parent::getAdapter();
+    }
 }

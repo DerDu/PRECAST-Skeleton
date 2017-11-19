@@ -16,6 +16,10 @@ var_dump($Factory);
 $Factory = new PRECAST\Vendor\Factory\Package\Cache();
 var_dump($Factory);
 
+//$Factory->getPackage()->setValue('Test1', 'Value1', 10);
+var_dump(
+    $Factory->getPackage()->getValue('Test1' )
+);
 // #####################################################################################################################
 
 $Benchmark->printBenchmark( 'Test Factory' );

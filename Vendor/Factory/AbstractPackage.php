@@ -72,7 +72,7 @@ abstract class AbstractPackage implements PackageInterface
     /**
      * @return null|AdapterInterface
      */
-    protected function getAdapter()
+    public function getAdapter()
     {
         return $this->Adapter;
     }
