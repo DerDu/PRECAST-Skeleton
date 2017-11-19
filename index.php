@@ -13,6 +13,8 @@ $Benchmark->printBenchmark( 'Boot Autoloader' );
 
 $Factory = new PRECAST\Vendor\Factory\Package\FileSystem();
 var_dump($Factory);
+$Factory = new PRECAST\Vendor\Factory\Package\Cache();
+var_dump($Factory);
 
 // #####################################################################################################################
 

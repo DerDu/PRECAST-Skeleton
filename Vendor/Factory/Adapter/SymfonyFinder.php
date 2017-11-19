@@ -8,7 +8,7 @@ use PRECAST\Vendor\Factory\Package\FileSystem;
 
 /**
  * Class SymfonyFinder
- * @package Vendor\Factory\Adapter
+ * @package PRECAST\Vendor\Factory\Adapter
  */
 class SymfonyFinder extends AbstractAdapter implements FileSystemInterface
 {

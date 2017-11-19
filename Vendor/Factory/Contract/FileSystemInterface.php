@@ -6,7 +6,7 @@ use PRECAST\Vendor\Factory\Package\FileSystem;
 
 /**
  * Interface FileSystemInterface
- * @package Vendor\Factory\Contract
+ * @package PRECAST\Vendor\Factory\Contract
  */
 interface FileSystemInterface
 {

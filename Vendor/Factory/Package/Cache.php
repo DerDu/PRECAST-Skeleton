@@ -4,14 +4,14 @@ namespace PRECAST\Vendor\Factory\Package;
 
 use PRECAST\Vendor\Factory\AbstractPackage;
 use PRECAST\Vendor\Factory\AdapterInterface;
-use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
+use PRECAST\Vendor\Factory\Contract\CacheInterface;
 use PRECAST\Vendor\Factory\PackageInterface;
 
 /**
- * Class FileSystem
+ * Class Cache
  * @package PRECAST\Vendor\Factory\Package
  */
-class FileSystem extends AbstractPackage implements PackageInterface
+class Cache extends AbstractPackage implements PackageInterface
 {
     /**
      * PackageInterface constructor.
@@ -19,10 +19,10 @@ class FileSystem extends AbstractPackage implements PackageInterface
      */
     public function __construct(AdapterInterface $AdapterInterface = null)
     {
-        if ($AdapterInterface !== null && in_array(FileSystemInterface::class, class_implements($AdapterInterface))) {
+        if ($AdapterInterface !== null && in_array(CacheInterface::class, class_implements($AdapterInterface))) {
             $this->useAdapter($AdapterInterface);
         }
-        $this->defineInterface(FileSystemInterface::class);
+        $this->defineInterface(CacheInterface::class);
         parent::__construct();
     }
 }

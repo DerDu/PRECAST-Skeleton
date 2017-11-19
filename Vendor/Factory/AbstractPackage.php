@@ -8,13 +8,12 @@ namespace PRECAST\Vendor\Factory;
  */
 abstract class AbstractPackage implements PackageInterface
 {
+    /** @var AdapterInterface[][] $AdapterList */
+    private static $AdapterList = [];
     private $AdapterNamespace = 'PRECAST\Vendor\Factory\Adapter';
     /** @var null|AdapterInterface $Adapter */
 
     private $Adapter = null;
-    /** @var AdapterInterface[] $AdapterList */
-    private static $AdapterList = [];
-
     /** @var string $Interface */
     private $Interface = '';
 
@@ -25,9 +24,9 @@ abstract class AbstractPackage implements PackageInterface
     {
         if (!$this->Adapter) {
             $this->findAdapter();
-            $Adapter = current(self::$AdapterList);
-            if(!$Adapter) {
-                throw new \Exception('No Adapter available for '.$this->Interface);
+            $Adapter = current(self::$AdapterList[$this->Interface]);
+            if (!$Adapter) {
+                throw new \Exception('No Adapter available for ' . $this->Interface);
             }
             $this->useAdapter(new $Adapter);
         }
@@ -38,12 +37,12 @@ abstract class AbstractPackage implements PackageInterface
      */
     private function findAdapter()
     {
-        if( !self::$AdapterList ) {
+        if( !isset(self::$AdapterList[$this->Interface]) ) {
             $AdapterFileList = array_map(function ($Adapter) {
                 return $this->AdapterNamespace . '\\' . basename($Adapter, '.php');
             }, array_slice(scandir(str_replace('PRECAST\\', '', $this->AdapterNamespace)), 2));
 
-            self::$AdapterList = array_filter($AdapterFileList, function ($Class) {
+            self::$AdapterList[$this->Interface] = array_filter($AdapterFileList, function ($Class) {
                 return in_array($this->Interface, class_implements($Class));
             });
         }
