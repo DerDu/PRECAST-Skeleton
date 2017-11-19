@@ -1,15 +1,14 @@
 <?php
 
-namespace Vendor\Factory\Contract;
+namespace PRECAST\Vendor\Factory\Contract;
 
-use Vendor\Contract\ContainerInterface;
-use Vendor\Factory\Container\FileSystem;
+use PRECAST\Vendor\Factory\Package\FileSystem;
 
 /**
- * Class FileSystem
- * @package Vendor\Factory\Container
+ * Interface FileSystemInterface
+ * @package Vendor\Factory\Contract
  */
-interface FileSystemInterface extends ContainerInterface
+interface FileSystemInterface
 {
     /**
      * @return string
@@ -53,4 +52,15 @@ interface FileSystemInterface extends ContainerInterface
      * @return int
      */
     public function getFileSize(): int;
+
+    /**
+     * @return string
+     */
+    public function getFileContent(): string;
+
+    /**
+     * @param string $Content
+     * @return FileSystem
+     */
+    public function setFileContent(string $Content): FileSystem;
 }

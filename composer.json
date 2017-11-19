@@ -24,8 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Vendor\\": "Vendor",
-            "Configuration\\": "Configuration"
+            "PRECAST\\Vendor\\": "Vendor"
         }
     }
 }
