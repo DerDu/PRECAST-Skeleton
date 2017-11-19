@@ -11,15 +11,16 @@ interface CacheInterface
     /**
      * @param string $Key
      * @param mixed $Value
+     * @param null|int $Timeout
      * @param string $Region
      * @return CacheInterface
      */
-    public function setValue($Key, $Value, $Region = ''): CacheInterface;
+    public function setValue($Key, $Value, $Timeout = null, $Region = ''): CacheInterface;
 
     /**
      * @param string $Key
      * @param string $Region
-     * @return mixed
+     * @return mixed|null
      */
     public function getValue($Key, $Region = '');
 }
