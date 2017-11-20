@@ -24,7 +24,8 @@
     },
     "autoload": {
         "psr-4": {
-            "PRECAST\\Vendor\\": "Vendor"
+            "PRECAST\\Vendor\\": "Vendor",
+            "PRECAST\\Facade\\": "Facade"
         }
     }
 }

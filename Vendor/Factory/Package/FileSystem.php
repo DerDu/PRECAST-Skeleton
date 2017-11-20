@@ -25,4 +25,12 @@ class FileSystem extends AbstractPackage implements PackageInterface
         $this->defineInterface(FileSystemInterface::class);
         parent::__construct();
     }
+
+    /**
+     * @return null|FileSystemInterface
+     */
+    public function getPackage() : FileSystemInterface
+    {
+        return parent::getAdapter();
+    }
 }

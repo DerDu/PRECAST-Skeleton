@@ -2,13 +2,14 @@
 
 namespace PRECAST\Vendor\Factory\Contract;
 
+use PRECAST\Vendor\Factory\AdapterInterface;
 use PRECAST\Vendor\Factory\Package\FileSystem;
 
 /**
  * Interface FileSystemInterface
  * @package PRECAST\Vendor\Factory\Contract
  */
-interface FileSystemInterface
+interface FileSystemInterface extends AdapterInterface
 {
     /**
      * @return string
