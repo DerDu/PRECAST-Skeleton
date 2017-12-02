@@ -2,15 +2,16 @@
 
 namespace PRECAST\Vendor\Factory\Package;
 
+
 use PRECAST\Vendor\Factory\AbstractPackage;
 use PRECAST\Vendor\Factory\AdapterInterface;
-use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
+use PRECAST\Vendor\Factory\Contract\ConfigurationInterface;
 
 /**
- * Class FileSystem
+ * Class Configuration
  * @package PRECAST\Vendor\Factory\Package
  */
-class FileSystem extends AbstractPackage
+class Configuration extends AbstractPackage
 {
     /**
      * PackageInterface constructor.
@@ -18,17 +19,18 @@ class FileSystem extends AbstractPackage
      */
     public function __construct(AdapterInterface $Adapter = null)
     {
-        $this->defineInterface(FileSystemInterface::class);
+        $this->defineInterface(ConfigurationInterface::class);
         parent::__construct($Adapter);
     }
 
     /**
-     * @return null|FileSystemInterface
+     * @return null|ConfigurationInterface
      */
-    public function getPackage(): FileSystemInterface
+    public function getPackage(): ConfigurationInterface
     {
-        /** @var FileSystemInterface $Adapter */
+        /** @var ConfigurationInterface $Adapter */
         $Adapter = parent::getAdapter();
         return $Adapter;
     }
+
 }

@@ -20,12 +20,22 @@
         "symfony/finder": "~v3.3",
         "symfony/yaml": "~v3.3",
         "laravel/framework": "~v5.5",
-        "phpfastcache/phpfastcache": "~6.0"
+        "phpfastcache/phpfastcache": "~6.0",
+        "filp/whoops": "~2.1",
+
+        "phpunit/phpunit": "~6.5",
+        "phpunit/dbunit": "~3.0"
     },
     "autoload": {
         "psr-4": {
+            "PRECAST\\Environment\\": "Environment",
             "PRECAST\\Vendor\\": "Vendor",
             "PRECAST\\Facade\\": "Facade"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PRECAST\\": "UnitTest"
         }
     }
 }

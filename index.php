@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.DIRECTORY_SEPARATOR.'Benchmark.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'Benchmark.php';
 
 $Benchmark = new \PRECAST\Benchmark();
 // #####################################################################################################################
@@ -9,17 +9,40 @@ require_once __DIR__ . DIRECTORY_SEPARATOR
     . 'Repository' . DIRECTORY_SEPARATOR
     . 'autoload.php';
 
-$Benchmark->printBenchmark( 'Boot Autoloader' );
+$Benchmark->printBenchmark('Boot Autoloader');
 
-$Factory = new PRECAST\Vendor\Factory\Package\FileSystem();
-var_dump($Factory);
-$Factory = \PRECAST\Facade\Cache::Package();
-var_dump($Factory);
-
-//$Factory->setValue('Test1', 'Value1', 10);
-var_dump(
-    $Factory->getValue('Test1' )
-);
 // #####################################################################################################################
 
-$Benchmark->printBenchmark( 'Test Factory' );
+$Whoops = new \Whoops\Run;
+$Whoops->pushHandler(new \Whoops\Handler\PlainTextHandler());
+$Whoops->register();
+
+$Benchmark->printBenchmark('Boot Error Handler');
+
+// #####################################################################################################################
+
+\PRECAST\Environment\Environment::setEnvironment(\PRECAST\Environment\Environment::USE_DEVELOPMENT);
+
+$Benchmark->printBenchmark('Setup Environment');
+
+// #####################################################################################################################
+
+$Factory = \PRECAST\Facade\FileSystem::Package();
+
+$Benchmark->printBenchmark('Test FileSystem');
+
+// #####################################################################################################################
+
+$Factory = \PRECAST\Facade\Cache::Package();
+
+$Benchmark->printBenchmark('Test Cache');
+
+// #####################################################################################################################
+
+$Factory = \PRECAST\Facade\Configuration::Package();
+
+$Benchmark->printBenchmark('Test Configuration');
+
+// #####################################################################################################################
+
+$Benchmark->printBenchmark('Exit');

@@ -2,7 +2,10 @@
 
 namespace PRECAST\Vendor\Factory;
 
-
+/**
+ * Interface PackageInterface
+ * @package PRECAST\Vendor\Factory
+ */
 interface PackageInterface
 {
     /**

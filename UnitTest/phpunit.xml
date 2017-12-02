@@ -1,0 +1,22 @@
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
+	backupGlobals="true"
+	cacheTokens="false"
+	bootstrap="bootstrap.php"
+>
+	<testsuites>
+		<testsuite name="PRECAST-Environment">
+			<directory suffix=".php">Environment/</directory>
+		</testsuite>
+		<testsuite name="PRECAST-Vendor-Adapter">
+			<directory suffix=".php">Vendor/Factory/Adapter</directory>
+		</testsuite>
+		<testsuite name="PRECAST-Vendor-Package">
+			<directory suffix=".php">Vendor/Factory/Package</directory>
+		</testsuite>
+		<testsuite name="PRECAST-Facade">
+			<directory suffix=".php">Facade/</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

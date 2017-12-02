@@ -4,7 +4,6 @@ namespace PRECAST\Vendor\Factory\Adapter;
 
 use PRECAST\Vendor\Factory\AbstractAdapter;
 use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
-use PRECAST\Vendor\Factory\Package\FileSystem;
 
 /**
  * Class SymfonyFinder
@@ -30,9 +29,9 @@ class SymfonyFinder extends AbstractAdapter implements FileSystemInterface
 
     /**
      * @param string $FileLocation
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileLocation(string $FileLocation): FileSystem
+    public function setFileLocation(string $FileLocation): FileSystemInterface
     {
         // TODO: Implement setFileLocation() method.
     }
@@ -47,9 +46,9 @@ class SymfonyFinder extends AbstractAdapter implements FileSystemInterface
 
     /**
      * @param string $FileName
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileName(string $FileName): FileSystem
+    public function setFileName(string $FileName): FileSystemInterface
     {
         // TODO: Implement setFileName() method.
     }
@@ -64,9 +63,9 @@ class SymfonyFinder extends AbstractAdapter implements FileSystemInterface
 
     /**
      * @param string $FileExtension
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileExtension(string $FileExtension): FileSystem
+    public function setFileExtension(string $FileExtension): FileSystemInterface
     {
         // TODO: Implement setFileExtension() method.
     }
@@ -89,9 +88,9 @@ class SymfonyFinder extends AbstractAdapter implements FileSystemInterface
 
     /**
      * @param string $Content
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileContent(string $Content): FileSystem
+    public function setFileContent(string $Content): FileSystemInterface
     {
         // TODO: Implement setFileContent() method.
     }

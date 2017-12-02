@@ -2,14 +2,11 @@
 
 namespace PRECAST\Vendor\Factory\Contract;
 
-use PRECAST\Vendor\Factory\AdapterInterface;
-use PRECAST\Vendor\Factory\Package\FileSystem;
-
 /**
  * Interface FileSystemInterface
  * @package PRECAST\Vendor\Factory\Contract
  */
-interface FileSystemInterface extends AdapterInterface
+interface FileSystemInterface
 {
     /**
      * @return string
@@ -23,9 +20,9 @@ interface FileSystemInterface extends AdapterInterface
 
     /**
      * @param string $FileLocation
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileLocation(string $FileLocation): FileSystem;
+    public function setFileLocation(string $FileLocation): FileSystemInterface;
 
     /**
      * @return string
@@ -34,9 +31,9 @@ interface FileSystemInterface extends AdapterInterface
 
     /**
      * @param string $FileName
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileName(string $FileName): FileSystem;
+    public function setFileName(string $FileName): FileSystemInterface;
 
     /**
      * @return string
@@ -45,9 +42,9 @@ interface FileSystemInterface extends AdapterInterface
 
     /**
      * @param string $FileExtension
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileExtension(string $FileExtension): FileSystem;
+    public function setFileExtension(string $FileExtension): FileSystemInterface;
 
     /**
      * @return int
@@ -61,7 +58,7 @@ interface FileSystemInterface extends AdapterInterface
 
     /**
      * @param string $Content
-     * @return FileSystem
+     * @return FileSystemInterface
      */
-    public function setFileContent(string $Content): FileSystem;
+    public function setFileContent(string $Content): FileSystemInterface;
 }

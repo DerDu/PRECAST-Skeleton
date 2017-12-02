@@ -23,4 +23,17 @@ interface CacheInterface
      * @return mixed|null
      */
     public function getValue($Key, $Region = '');
+
+    /**
+     * @param string $Key
+     * @param string $Region
+     * @return CacheInterface
+     */
+    public function clearValue($Key, $Region = ''): CacheInterface;
+
+    /**
+     * @param string $Region
+     * @return CacheInterface
+     */
+    public function clearRegion($Region = ''): CacheInterface;
 }

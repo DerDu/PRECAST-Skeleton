@@ -5,32 +5,30 @@ namespace PRECAST\Vendor\Factory\Package;
 use PRECAST\Vendor\Factory\AbstractPackage;
 use PRECAST\Vendor\Factory\AdapterInterface;
 use PRECAST\Vendor\Factory\Contract\CacheInterface;
-use PRECAST\Vendor\Factory\PackageInterface;
 
 /**
  * Class Cache
  * @package PRECAST\Vendor\Factory\Package
  */
-class Cache extends AbstractPackage implements PackageInterface
+class Cache extends AbstractPackage
 {
     /**
      * PackageInterface constructor.
-     * @param AdapterInterface|null $AdapterInterface
+     * @param AdapterInterface|null $Adapter
      */
-    public function __construct(AdapterInterface $AdapterInterface = null)
+    public function __construct(AdapterInterface $Adapter = null)
     {
-        if ($AdapterInterface !== null && in_array(CacheInterface::class, class_implements($AdapterInterface))) {
-            $this->useAdapter($AdapterInterface);
-        }
         $this->defineInterface(CacheInterface::class);
-        parent::__construct();
+        parent::__construct($Adapter);
     }
 
     /**
      * @return null|CacheInterface
      */
-    public function getPackage() : CacheInterface
+    public function getPackage(): CacheInterface
     {
-        return parent::getAdapter();
+        /** @var CacheInterface $Adapter */
+        $Adapter = parent::getAdapter();
+        return $Adapter;
     }
 }
