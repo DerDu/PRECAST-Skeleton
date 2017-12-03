@@ -8,7 +8,7 @@ use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
  * Class Cache
  * @package PRECAST\Facade
  */
-class FileSystem
+class FileSystem implements FacadeInterface
 {
     /**
      * @return null|FileSystemInterface

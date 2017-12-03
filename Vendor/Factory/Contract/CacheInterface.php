@@ -2,11 +2,13 @@
 
 namespace PRECAST\Vendor\Factory\Contract;
 
+use PRECAST\Vendor\Factory\AdapterInterface;
+
 /**
  * Interface CacheInterface
  * @package PRECAST\Vendor\Factory\Contract
  */
-interface CacheInterface
+interface CacheInterface extends AdapterInterface
 {
     /**
      * @param string $Key
@@ -36,4 +38,9 @@ interface CacheInterface
      * @return CacheInterface
      */
     public function clearRegion($Region = ''): CacheInterface;
+
+    /**
+     * @return CacheInterface
+     */
+    public function clearCache();
 }

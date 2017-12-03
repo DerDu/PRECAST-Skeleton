@@ -7,16 +7,28 @@
 >
 	<testsuites>
 		<testsuite name="PRECAST-Environment">
-			<directory suffix=".php">Environment/</directory>
-		</testsuite>
-		<testsuite name="PRECAST-Vendor-Adapter">
-			<directory suffix=".php">Vendor/Factory/Adapter</directory>
-		</testsuite>
-		<testsuite name="PRECAST-Vendor-Package">
-			<directory suffix=".php">Vendor/Factory/Package</directory>
+			<directory suffix=".php">Environment</directory>
 		</testsuite>
 		<testsuite name="PRECAST-Facade">
-			<directory suffix=".php">Facade/</directory>
+			<directory suffix=".php">Facade</directory>
+		</testsuite>
+		<testsuite name="PRECAST-Vendor">
+			<directory suffix=".php">Vendor/Factory</directory>
 		</testsuite>
 	</testsuites>
+
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true" addUncoveredFilesFromWhitelist="false">
+			<directory suffix=".php">Environment</directory>
+			<directory suffix=".php">../Environment</directory>
+			<directory suffix=".php">Facade</directory>
+			<directory suffix=".php">../Facade</directory>
+			<directory suffix=".php">Vendor/Factory</directory>
+			<directory suffix=".php">../Vendor/Factory</directory>
+			<exclude>
+				<directory>../Vendor/Repository</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+
 </phpunit>

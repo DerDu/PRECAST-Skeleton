@@ -8,7 +8,7 @@ use PRECAST\Vendor\Factory\Contract\ConfigurationInterface;
  * Class Configuration
  * @package PRECAST\Facade
  */
-class Configuration
+class Configuration implements FacadeInterface
 {
     /**
      * @return null|ConfigurationInterface

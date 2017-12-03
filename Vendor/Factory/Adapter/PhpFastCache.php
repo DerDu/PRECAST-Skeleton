@@ -132,4 +132,13 @@ class PhpFastCache extends AbstractAdapter implements CacheInterface
         }
         return $this;
     }
+
+    /**
+     * @return CacheInterface
+     */
+    public function clearCache()
+    {
+        $this->useDriver()->clear();
+        return $this;
+    }
 }

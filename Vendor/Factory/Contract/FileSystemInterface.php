@@ -8,57 +8,19 @@ namespace PRECAST\Vendor\Factory\Contract;
  */
 interface FileSystemInterface
 {
-    /**
-     * @return string
-     */
-    public function getFileUri(): string;
 
     /**
-     * @return string
-     */
-    public function getFileLocation(): string;
-
-    /**
-     * @param string $FileLocation
+     * @param string $Name
      * @return FileSystemInterface
      */
-    public function setFileLocation(string $FileLocation): FileSystemInterface;
+    public function searchDirectory(string $Name): FileSystemInterface;
 
     /**
-     * @return string
-     */
-    public function getFileName(): string;
-
-    /**
-     * @param string $FileName
+     * Accepts glob, string, or regex
+     *
+     * @param string $Name
      * @return FileSystemInterface
      */
-    public function setFileName(string $FileName): FileSystemInterface;
+    public function findFile(string $Name): FileSystemInterface;
 
-    /**
-     * @return string
-     */
-    public function getFileExtension(): string;
-
-    /**
-     * @param string $FileExtension
-     * @return FileSystemInterface
-     */
-    public function setFileExtension(string $FileExtension): FileSystemInterface;
-
-    /**
-     * @return int
-     */
-    public function getFileSize(): int;
-
-    /**
-     * @return string
-     */
-    public function getFileContent(): string;
-
-    /**
-     * @param string $Content
-     * @return FileSystemInterface
-     */
-    public function setFileContent(string $Content): FileSystemInterface;
 }

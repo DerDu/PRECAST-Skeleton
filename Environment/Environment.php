@@ -2,15 +2,17 @@
 
 namespace PRECAST\Environment;
 
+use PRECAST\Facade\FileSystem;
+use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
+
 /**
  * Class Environment
+ * @package PRECAST\Environment
  */
 class Environment
 {
-    /**
-     * PHPUnit
-     */
-    const USE_TEST = __DIR__ . DIRECTORY_SEPARATOR . 'Test';
+
+    const USE_TEST = __DIR__ . DIRECTORY_SEPARATOR . 'UnitTest';
     const USE_DEVELOPMENT = __DIR__ . DIRECTORY_SEPARATOR . 'Development';
     const USE_INTEGRATION = __DIR__ . DIRECTORY_SEPARATOR . 'Integration';
     const USE_PRODUCTION = __DIR__ . DIRECTORY_SEPARATOR . 'Production';
@@ -23,15 +25,16 @@ class Environment
         if (!defined('APP_ENVIRONMENT')) {
             define('APP_ENVIRONMENT', $Environment);
         }
-    }
 
-    /**
-     * @param string $FileName
-     * @return string
-     */
-    public static function getConfigurationFile($FileName)
-    {
-        return APP_ENVIRONMENT . DIRECTORY_SEPARATOR . $FileName;
+        switch (self::getEnvironment()) {
+            case self::USE_INTEGRATION:
+            case self::USE_PRODUCTION:
+                (new \PRECAST\Benchmark())->disableOutput();
+                break;
+            default:
+                (new \PRECAST\Benchmark())->enableOutput();
+                break;
+        }
     }
 
     /**
@@ -40,5 +43,16 @@ class Environment
     public static function getEnvironment()
     {
         return APP_ENVIRONMENT;
+    }
+
+    /**
+     * @param string $FileName
+     * @return FileSystemInterface
+     */
+    public static function getConfigurationFile($FileName)
+    {
+        return FileSystem::Package()
+            ->searchDirectory(self::getEnvironment())
+            ->findFile($FileName);
     }
 }

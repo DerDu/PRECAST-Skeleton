@@ -2,6 +2,7 @@
 
 namespace PRECAST\Vendor\Factory;
 
+use PRECAST\Benchmark;
 use PRECAST\Environment\Environment;
 use PRECAST\Vendor\Factory\Adapter\PhpFastCache;
 
@@ -61,20 +62,39 @@ abstract class AbstractPackage implements PackageInterface
         $Cache = new PhpFastCache();
 
         // Ask Cache
-        if (!isset(self::$AdapterList[$this->Interface])) {
-            $AdapterCache = $Cache->getValue($this->Interface, __METHOD__);
-            if (null !== $AdapterCache) {
-                self::$AdapterList[$this->Interface] = $AdapterCache;
-            }
+        switch (Environment::getEnvironment()) {
+            case Environment::USE_PRODUCTION:
+            case Environment::USE_INTEGRATION:
+            case Environment::USE_TEST:
+                if (!isset(self::$AdapterList[$this->Interface])) {
+                    $AdapterCache = $Cache->getValue($this->Interface, __METHOD__);
+                    if (null !== $AdapterCache) {
+                        Benchmark::Log(__METHOD__.' CACHE '.PHP_EOL.$this->Interface);
+                        self::$AdapterList[$this->Interface] = $AdapterCache;
+                    }
+                }
+                break;
         }
 
         // Ask FileSystem
         if (!isset(self::$AdapterList[$this->Interface])) {
-            $AdapterFileList = array_map(function ($Adapter) {
-                return $this->AdapterNamespace . '\\' . basename($Adapter, '.php');
-            }, array_slice(scandir(str_replace('PRECAST\\', '', $this->AdapterNamespace)), 2));
+            Benchmark::Log(__METHOD__.' I/O '.PHP_EOL.$this->Interface);
 
-            self::$AdapterList[$this->Interface] = array_filter($AdapterFileList, function ($Class) {
+            $Directory = trim(str_replace('PRECAST', '', $this->AdapterNamespace), '\\');
+            $RDI = new \RecursiveDirectoryIterator($Directory, \RecursiveDirectoryIterator::SKIP_DOTS);
+            $RII = new \RecursiveIteratorIterator(
+                $RDI, \RecursiveIteratorIterator::SELF_FIRST, \RecursiveIteratorIterator::CATCH_GET_CHILD
+            );
+            $AdapterClassList = [];
+            /** @var \SplFileInfo $Item */
+            foreach ($RII as $Item) {
+                if ($Item->isDir()) {
+                    continue;
+                }
+                $AdapterClassList[] = 'PRECAST\\' . $Item->getPath() . '\\' . $Item->getBasename('.php');
+            }
+
+            self::$AdapterList[$this->Interface] = array_filter($AdapterClassList, function ($Class) {
                 return in_array($this->Interface, class_implements($Class));
             });
             $Cache->setValue($this->Interface, self::$AdapterList[$this->Interface], 900, __METHOD__);
@@ -97,11 +117,11 @@ abstract class AbstractPackage implements PackageInterface
      */
     final protected function defineInterface(string $AdapterInterface)
     {
-        if (Environment::getEnvironment() == Environment::USE_TEST) {
-            $this->Interface = $AdapterInterface . 'MockUp';
-        } else {
+//        if (Environment::getEnvironment() == Environment::USE_TEST) {
+//            $this->Interface = $AdapterInterface . 'MockUp';
+//        } else {
             $this->Interface = $AdapterInterface;
-        }
+//        }
         return $this;
     }
 }

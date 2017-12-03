@@ -4,6 +4,7 @@ namespace PRECAST\Vendor\Factory\Adapter;
 
 use PRECAST\Vendor\Factory\AbstractAdapter;
 use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class SymfonyFinder
@@ -11,88 +12,58 @@ use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
  */
 class SymfonyFinder extends AbstractAdapter implements FileSystemInterface
 {
+
+    /** @var null|Finder $Vendor */
+    private $Vendor = null;
+
     /**
-     * @return string
+     * SymfonyFinder constructor.
      */
-    public function getFileUri(): string
+    public function __construct()
     {
-        // TODO: Implement getFileUri() method.
+        $this->Vendor = new Finder();
+        $this->Vendor
+            ->files()
+            ->followLinks()
+            ->ignoreUnreadableDirs(true)
+            ->ignoreVCS(true)
+            ->ignoreDotFiles(true);
     }
 
     /**
-     * @return string
-     */
-    public function getFileLocation(): string
-    {
-        // TODO: Implement getFileLocation() method.
-    }
-
-    /**
-     * @param string $FileLocation
+     * @param string $Name
      * @return FileSystemInterface
      */
-    public function setFileLocation(string $FileLocation): FileSystemInterface
+    public function searchDirectory(string $Name): FileSystemInterface
     {
-        // TODO: Implement setFileLocation() method.
+        $this->Vendor->in($Name);
+        return $this;
     }
 
     /**
-     * @return string
-     */
-    public function getFileName(): string
-    {
-        // TODO: Implement getFileName() method.
-    }
-
-    /**
-     * @param string $FileName
+     * Accepts glob, string, or regex
+     *
+     * @param string $Name
      * @return FileSystemInterface
      */
-    public function setFileName(string $FileName): FileSystemInterface
+    public function findFile(string $Name): FileSystemInterface
     {
-        // TODO: Implement setFileName() method.
+        $this->Vendor->name($Name);
+        return $this;
     }
 
     /**
-     * @return string
+     * @return array|null
      */
-    public function getFileExtension(): string
+    private function getIteratorList()
     {
-        // TODO: Implement getFileExtension() method.
+        if ($this->Vendor->hasResults()) {
+            $Result = [];
+            foreach ( $this->Vendor as $Iterator ) {
+                $Result[] = $Iterator;
+            }
+            return $Result;
+        }
+        return null;
     }
-
-    /**
-     * @param string $FileExtension
-     * @return FileSystemInterface
-     */
-    public function setFileExtension(string $FileExtension): FileSystemInterface
-    {
-        // TODO: Implement setFileExtension() method.
-    }
-
-    /**
-     * @return int
-     */
-    public function getFileSize(): int
-    {
-        // TODO: Implement getFileSize() method.
-    }
-
-    /**
-     * @return string
-     */
-    public function getFileContent(): string
-    {
-        // TODO: Implement getFileContent() method.
-    }
-
-    /**
-     * @param string $Content
-     * @return FileSystemInterface
-     */
-    public function setFileContent(string $Content): FileSystemInterface
-    {
-        // TODO: Implement setFileContent() method.
-    }
-
 }

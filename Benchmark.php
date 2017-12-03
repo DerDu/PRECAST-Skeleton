@@ -8,6 +8,7 @@ namespace PRECAST;
  */
 class Benchmark
 {
+    private static $Output = false;
     private $Start = null;
     private $WallTime = null;
     private $SplitTime = null;
@@ -24,25 +25,15 @@ class Benchmark
     }
 
     /**
-     * @param string $Description
+     * @param $Message
      */
-    public function printBenchmark($Description)
+    public static function Log($Message)
     {
-        $this->Stop = getrusage();
-
-        self::echoRuler();
-        echo $Description;
-        self::echoRuler();
-        echo "This process used " . $this->getBenchmark($this->Stop, $this->Start, "utime") .
-            " ms for its computations" . PHP_EOL;
-        echo "It spent " . $this->getBenchmark($this->Stop, $this->Start, "stime") .
-            " ms in system calls". PHP_EOL;
-        echo "Section - Time elapsed ".$this->getWallTime(true).'ms'.PHP_EOL;
-        echo "Overall - Time elapsed ".$this->getWallTime().'ms';
-        self::echoRuler();
-        echo PHP_EOL;
-
-        $this->Start = getrusage();
+        if (self::$Output) {
+            self::echoRuler();
+            echo print_r($Message, true);
+            self::echoRuler();
+        }
     }
 
     private static function echoRuler()
@@ -51,17 +42,42 @@ class Benchmark
     }
 
     /**
-     * @param bool $Split
-     * @return float
+     *
      */
-    private function getWallTime($Split = false) {
-        if( $Split ) {
-            $Time = round(microtime(true) * 1000) - round($this->SplitTime * 1000);
-        } else {
-            $Time = round(microtime(true) * 1000) - round($this->WallTime * 1000);
+    public function disableOutput()
+    {
+        self::$Output = false;
+    }
+
+    /**
+     *
+     */
+    public function enableOutput()
+    {
+        self::$Output = true;
+    }
+
+    /**
+     * @param string $Description
+     */
+    public function printBenchmark($Description)
+    {
+        $this->Stop = getrusage();
+        if (self::$Output) {
+            self::echoRuler();
+            echo $Description;
+            self::echoRuler();
+            echo "This process used " . $this->getBenchmark($this->Stop, $this->Start, "utime") .
+                " ms for its computations" . PHP_EOL;
+            echo "It spent " . $this->getBenchmark($this->Stop, $this->Start, "stime") .
+                " ms in system calls" . PHP_EOL;
+            echo "Section - Time elapsed " . $this->getWallTime(true) . 'ms' . PHP_EOL;
+            echo "Overall - Time elapsed " . $this->getWallTime() . 'ms';
+            self::echoRuler();
+            echo PHP_EOL;
         }
+        $this->Start = getrusage();
         $this->SplitTime = microtime(true);
-        return $Time;
     }
 
     /**
@@ -77,12 +93,16 @@ class Benchmark
     }
 
     /**
-     * @param $Message
+     * @param bool $Split
+     * @return float
      */
-    public static function Log($Message)
+    private function getWallTime($Split = false)
     {
-        self::echoRuler();
-        echo print_r( $Message, true );
-        self::echoRuler();
+        if ($Split) {
+            $Time = round(microtime(true) * 1000) - round($this->SplitTime * 1000);
+        } else {
+            $Time = round(microtime(true) * 1000) - round($this->WallTime * 1000);
+        }
+        return $Time;
     }
 }
