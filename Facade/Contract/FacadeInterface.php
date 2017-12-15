@@ -1,6 +1,6 @@
 <?php
 
-namespace PRECAST\Facade;
+namespace PRECAST\Facade\Contract;
 
 use PRECAST\Vendor\Factory\AdapterInterface;
 
@@ -11,7 +11,8 @@ use PRECAST\Vendor\Factory\AdapterInterface;
 interface FacadeInterface
 {
     /**
+     * @param FacadeOption|null $FacadeOption
      * @return null|AdapterInterface
      */
-    public static function Package();
+    public static function Package(FacadeOption $FacadeOption = null);
 }

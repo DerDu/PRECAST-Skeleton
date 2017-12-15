@@ -53,7 +53,6 @@ class PhpFastCache extends AbstractAdapter implements CacheInterface
         } catch (phpFastCacheInvalidArgumentException $Exception) {
             throw new \Exception($Exception->getMessage(), null, $Exception);
         }
-        //$this->useDriver()->set($this->buildKey($Key, $Region), $Value, $Timeout);
         return $this;
     }
 
@@ -63,8 +62,6 @@ class PhpFastCache extends AbstractAdapter implements CacheInterface
      */
     private function useDriver($Extended = false)
     {
-
-
         if ($Extended) {
             if (null === self::$ExtendedInterface) {
                 self::$ExtendedInterface = CacheManager::getInstance($this->Driver, $this->Config);

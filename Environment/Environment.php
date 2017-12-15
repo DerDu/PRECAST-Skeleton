@@ -2,8 +2,10 @@
 
 namespace PRECAST\Environment;
 
+use PRECAST\Facade\Contract\FacadeOption;
+use PRECAST\Facade\File;
 use PRECAST\Facade\FileSystem;
-use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
+use PRECAST\Vendor\Factory\Contract\FileInterface;
 
 /**
  * Class Environment
@@ -47,12 +49,17 @@ class Environment
 
     /**
      * @param string $FileName
-     * @return FileSystemInterface
+     * @return FileInterface
      */
     public static function getConfigurationFile($FileName)
     {
-        return FileSystem::Package()
+        $File = FileSystem::Package()
             ->searchDirectory(self::getEnvironment())
-            ->findFile($FileName);
+            ->findFile($FileName)
+            ->getFile();
+
+        return File::Package(
+            (new FacadeOption())->setOption(File::OPTION_FILE_TYPE, pathinfo($File, PATHINFO_EXTENSION))
+        )->loadFile($File);
     }
 }

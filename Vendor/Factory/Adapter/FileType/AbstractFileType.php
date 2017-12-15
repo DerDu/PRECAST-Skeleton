@@ -1,36 +1,36 @@
 <?php
 
-namespace PRECAST\Vendor\Factory\Adapter;
-
+namespace PRECAST\Vendor\Factory\Adapter\FileType;
 
 use PRECAST\Vendor\Factory\AbstractAdapter;
-use PRECAST\Vendor\Factory\Contract\ConfigurationInterface;
 use PRECAST\Vendor\Factory\Contract\FileInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class YamlFile
- * @package PRECAST\Vendor\Factory\Adapter
+ * Class AbstractFileType
+ * @package PRECAST\Vendor\Factory\Adapter\FileType
  */
-class YamlFile extends AbstractAdapter implements FileInterface
+abstract class AbstractFileType extends AbstractAdapter
 {
-
+    /** @var null|string $Uri */
+    private $Uri = null;
+    /** @var null|string $Content */
     private $Content = null;
 
     /**
      * @param string $Uri
-     * @return ConfigurationInterface
+     * @return FileInterface
      */
-    public function loadFile($Uri): ConfigurationInterface
+    public function loadFile(string $Uri): FileInterface
     {
-        $this->Content = Yaml::parseFile( $Uri );
+        $this->Uri = $Uri;
+        return $this;
     }
 
     /**
-     * @param null $Uri
+     * @param null|string $Uri
      * @return bool
      */
-    public function saveFile($Uri = null): bool
+    public function saveFile(string $Uri = null): bool
     {
         // TODO: Implement saveFile() method.
     }
@@ -48,7 +48,7 @@ class YamlFile extends AbstractAdapter implements FileInterface
      */
     public function getFileLocation(): string
     {
-        // TODO: Implement getFileLocation() method.
+        return $this->Uri;
     }
 
     /**
@@ -107,7 +107,7 @@ class YamlFile extends AbstractAdapter implements FileInterface
      */
     public function getFileContent(): string
     {
-        // TODO: Implement getFileContent() method.
+        return $this->Content;
     }
 
     /**
@@ -116,8 +116,7 @@ class YamlFile extends AbstractAdapter implements FileInterface
      */
     public function setFileContent(string $Content): FileInterface
     {
-        // TODO: Implement setFileContent() method.
+        $this->Content = $Content;
+        return $this;
     }
-
-
 }

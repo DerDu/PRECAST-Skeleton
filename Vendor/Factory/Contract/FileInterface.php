@@ -10,15 +10,15 @@ interface FileInterface
 {
     /**
      * @param string $Uri
-     * @return ConfigurationInterface
+     * @return FileInterface
      */
-    public function loadFile($FileLocation);
+    public function loadFile(string $Uri): FileInterface;
 
     /**
      * @param null|string $Uri
      * @return bool
      */
-    public function saveFile($Uri = null): bool;
+    public function saveFile(string $Uri = null): bool;
 
     /**
      * @return string

@@ -23,4 +23,13 @@ interface FileSystemInterface
      */
     public function findFile(string $Name): FileSystemInterface;
 
+    /**
+     * @return string
+     */
+    public function getFile(): string;
+
+    /**
+     * @return array
+     */
+    public function getFileList(): array;
 }

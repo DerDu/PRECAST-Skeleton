@@ -53,17 +53,40 @@ class SymfonyFinder extends AbstractAdapter implements FileSystemInterface
     }
 
     /**
+     * @return string
+     */
+    public function getFile(): string
+    {
+        /** @var \SplFileInfo $File */
+        $File = current($this->getIteratorList());
+        return $File->getRealPath();
+    }
+
+    /**
      * @return array|null
      */
     private function getIteratorList()
     {
         if ($this->Vendor->hasResults()) {
             $Result = [];
-            foreach ( $this->Vendor as $Iterator ) {
+            foreach ($this->Vendor as $Iterator) {
                 $Result[] = $Iterator;
             }
             return $Result;
         }
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFileList(): array
+    {
+        $FileList = $this->getIteratorList();
+        /** @var \SplFileInfo $File */
+        foreach ($FileList as $Index => $File) {
+            $FileList = $File->getRealPath();
+        }
+        return $FileList;
     }
 }

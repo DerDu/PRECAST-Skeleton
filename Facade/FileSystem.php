@@ -2,18 +2,21 @@
 
 namespace PRECAST\Facade;
 
+use PRECAST\Facade\Contract\AbstractFacade;
+use PRECAST\Facade\Contract\FacadeOption;
 use PRECAST\Vendor\Factory\Contract\FileSystemInterface;
 
 /**
  * Class Cache
  * @package PRECAST\Facade
  */
-class FileSystem implements FacadeInterface
+class FileSystem extends AbstractFacade
 {
     /**
-     * @return null|FileSystemInterface
+     * @param FacadeOption|null $FacadeOption
+     * @return FileSystemInterface
      */
-    public static function Package(): FileSystemInterface
+    public static function Package(FacadeOption $FacadeOption = null): FileSystemInterface
     {
         return (new \PRECAST\Vendor\Factory\Package\FileSystem())->getPackage();
     }

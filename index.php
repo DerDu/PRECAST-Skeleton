@@ -5,6 +5,7 @@ use PRECAST\Environment\Environment;
 use PRECAST\Facade\Cache;
 use PRECAST\Facade\Configuration;
 use PRECAST\Facade\FileSystem;
+use PRECAST\Facade\Template;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Benchmark.php';
 
@@ -19,7 +20,7 @@ $Benchmark = new Benchmark();
 
 Environment::setEnvironment(Environment::USE_DEVELOPMENT);
 
-$Benchmark->printBenchmark('Setup Environment: '. Environment::getEnvironment() );
+$Benchmark->printBenchmark('Setup Environment: ' . Environment::getEnvironment());
 
 // #####################################################################################################################
 
@@ -43,10 +44,20 @@ $Benchmark->printBenchmark('Test Cache');
 
 // #####################################################################################################################
 
-$Configuration = Environment::getConfigurationFile( 'Cache.yaml' );
+$Configuration = Environment::getConfigurationFile('Cache.yaml');
+
+var_dump( $Configuration );
+
+$Benchmark->printBenchmark('Get Configuration File');
 
 $Factory = Configuration::Package();
 
 $Benchmark->printBenchmark('Test Configuration');
+
+// #####################################################################################################################
+
+$Package = Template::Package();
+
+$Benchmark->printBenchmark('Test Template');
 
 // #####################################################################################################################
