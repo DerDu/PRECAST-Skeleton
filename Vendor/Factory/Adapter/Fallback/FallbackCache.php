@@ -3,27 +3,22 @@
 namespace PRECAST\Vendor\Factory\Adapter\Fallback;
 
 
-use PRECAST\Vendor\Factory\Adapter\Generic\AbstractCache;
 use PRECAST\Vendor\Factory\Contract\CacheInterface;
 use PRECAST\Vendor\Factory\FallbackAdapterInterface;
 
 /**
- * Class MemoryCache
+ * Class FallbackCache
  * @package PRECAST\Vendor\Factory\Adapter\Fallback
  */
-class MemoryCache extends AbstractCache implements FallbackAdapterInterface
+class FallbackCache implements CacheInterface, FallbackAdapterInterface
 {
     /** @var array[][] $MemoryCache */
     private static $MemoryCache = [];
 
     /**
-     * @param string $Key
-     * @param mixed $Value
-     * @param null|int $Timeout
-     * @param string $Region
-     * @return CacheInterface
+     * @inheritdoc
      */
-    public function setValue($Key, $Value, $Timeout = null, $Region = ''): CacheInterface
+    public function set($Key, $Value, $Timeout = null, $Region = ''): CacheInterface
     {
         self::$MemoryCache[$this->buildRegion($Region)][$this->buildKey($Key, $Region)] = [
             'TTL' => time() + $Timeout,
@@ -52,11 +47,9 @@ class MemoryCache extends AbstractCache implements FallbackAdapterInterface
     }
 
     /**
-     * @param string $Key
-     * @param string $Region
-     * @return mixed|null
+     * @inheritdoc
      */
-    public function getValue($Key, $Region = '')
+    public function get($Key, $Default = null, $Region = '')
     {
         if (isset(self::$MemoryCache[$this->buildRegion($Region)][$this->buildKey($Key, $Region)])) {
             $Value = self::$MemoryCache[$this->buildRegion($Region)][$this->buildKey($Key, $Region)];
@@ -70,11 +63,10 @@ class MemoryCache extends AbstractCache implements FallbackAdapterInterface
     }
 
     /**
-     * @param string $Key
-     * @param string $Region
+     * @inheritdoc
      * @return CacheInterface
      */
-    public function clearValue($Key, $Region = ''): CacheInterface
+    public function delete($Key, $Region = ''): CacheInterface
     {
         unset(self::$MemoryCache[$this->buildRegion($Region)][$this->buildKey($Key, $Region)]);
         return $this;
@@ -91,11 +83,46 @@ class MemoryCache extends AbstractCache implements FallbackAdapterInterface
     }
 
     /**
-     * @return CacheInterface
+     * @inheritdoc
      */
-    public function clearCache()
+    public function clear(): CacheInterface
     {
         self::$MemoryCache = [];
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function has($Key, $Region = '')
+    {
+        return isset(self::$MemoryCache[$this->buildRegion($Region)][$this->buildKey($Key, $Region)]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMultiple($Keys, $Default = null)
+    {
+        // TODO: Implement getMultiple() method.
+        throw new \Exception('Not implemented');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setMultiple($Values, $TTL = null)
+    {
+        // TODO: Implement setMultiple() method.
+        throw new \Exception('Not implemented');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteMultiple($Keys)
+    {
+        // TODO: Implement deleteMultiple() method.
+        throw new \Exception('Not implemented');
     }
 }

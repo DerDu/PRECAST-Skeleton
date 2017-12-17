@@ -11,5 +11,14 @@ use PRECAST\Vendor\Factory\FactoryInterface;
  */
 interface FileInterface extends FactoryInterface
 {
+    /**
+     * @param string $Location
+     * @return FileInterface
+     */
+    public function setFileLocation(string $Location): FileInterface;
 
+    /**
+     * @return string
+     */
+    public function getFileLocation(): string;
 }

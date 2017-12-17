@@ -2,7 +2,10 @@
 
 namespace PRECAST\Vendor;
 
+use PRECAST\Vendor\Factory\Adapter\Cache\FileCache;
+use PRECAST\Vendor\Factory\Adapter\Fallback\FallbackCache;
 use PRECAST\Vendor\Factory\AdapterInterface;
+use PRECAST\Vendor\Factory\Contract\CacheInterface;
 use PRECAST\Vendor\Factory\FactoryInterface;
 use PRECAST\Vendor\Factory\FallbackAdapterInterface;
 
@@ -18,12 +21,20 @@ class Factory
     private $FallbackAdapters = [];
     /** @var array $Adapters */
     private $Adapters = [];
+    /** @var null|CacheInterface */
+    private static $CacheAdapter = null;
 
     /**
      * Factory constructor.
+     * @param null|CacheInterface $CacheAdapter
      */
-    public function __construct()
+    public function __construct(CacheInterface $CacheAdapter = null)
     {
+        if ($CacheAdapter === null) {
+            self::$CacheAdapter = new FileCache();
+        } else {
+            self::$CacheAdapter = $CacheAdapter;
+        }
         $this->loadAvailableAdapter();
     }
 
@@ -32,6 +43,9 @@ class Factory
      */
     private function loadAvailableAdapter()
     {
+        $this->Adapters = self::$CacheAdapter->get(__METHOD__.'#Adapters');
+        $this->FallbackAdapters = self::$CacheAdapter->get(__METHOD__.'#FallbackAdapters');
+
         if (empty($this->Adapters)) {
             $RDI = new \RecursiveDirectoryIterator(
                 $this->AdapterDirectory,
@@ -57,12 +71,20 @@ class Factory
 
                 if ($Reflection->implementsInterface(FallbackAdapterInterface::class)) {
                     $this->FallbackAdapters[$Class] = $Reflection->getInterfaceNames();
+                    sort($this->FallbackAdapters[$Class]);
                 } else {
                     if ($Reflection->implementsInterface(AdapterInterface::class)) {
                         $this->Adapters[$Class] = $Reflection->getInterfaceNames();
+                        sort($this->Adapters[$Class]);
                     }
                 }
             }
+
+            ksort($this->Adapters);
+            ksort($this->FallbackAdapters);
+
+            self::$CacheAdapter->set(__METHOD__.'#Adapters', $this->Adapters, 10);
+            self::$CacheAdapter->set(__METHOD__.'#FallbackAdapters', $this->FallbackAdapters, 10);
         }
     }
 
@@ -97,7 +119,7 @@ class Factory
             }
         }
 
-        throw new \Exception('No suitable Adapter found for '. implode(', ', $factoryInterfaces));
+        throw new \Exception('No suitable Adapter found for ' . implode(', ', $factoryInterfaces));
     }
 
     /**

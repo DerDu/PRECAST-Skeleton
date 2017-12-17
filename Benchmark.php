@@ -36,9 +36,9 @@ class Benchmark
         }
     }
 
-    private static function echoRuler()
+    private static function echoRuler($Type = '#')
     {
-        echo PHP_EOL . str_repeat('#', 80) . PHP_EOL;
+        echo PHP_EOL . str_repeat($Type, 80) . PHP_EOL;
     }
 
     /**
@@ -64,17 +64,16 @@ class Benchmark
     {
         $this->Stop = getrusage();
         if (self::$Output) {
-            self::echoRuler();
-            echo $Description;
-            self::echoRuler();
+            self::echoRuler('_');
+            echo print_r($Description,true);
+            self::echoRuler('~');
             echo "This process used " . $this->getBenchmark($this->Stop, $this->Start, "utime") .
                 " ms for its computations" . PHP_EOL;
             echo "It spent " . $this->getBenchmark($this->Stop, $this->Start, "stime") .
                 " ms in system calls" . PHP_EOL;
             echo "Section - Time elapsed " . $this->getWallTime(true) . 'ms' . PHP_EOL;
             echo "Overall - Time elapsed " . $this->getWallTime() . 'ms';
-            self::echoRuler();
-            echo PHP_EOL;
+            self::echoRuler('^');
         }
         $this->Start = getrusage();
         $this->SplitTime = microtime(true);
