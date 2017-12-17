@@ -13,7 +13,7 @@ use PRECAST\Vendor\Factory\Contract\TemplateInterface;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Benchmark.php';
 $WallTime = new Benchmark();
-//$Benchmark = new Benchmark();
+$Benchmark = new Benchmark();
 
 // #####################################################################################################################
 
@@ -22,17 +22,17 @@ require_once __DIR__ . DIRECTORY_SEPARATOR
     . 'Repository' . DIRECTORY_SEPARATOR
     . 'autoload.php';
 
-//$Benchmark->printBenchmark('Boot Autoloader');
+$Benchmark->printBenchmark('Boot Autoloader');
 
 // #####################################################################################################################
-//
-//$Whoops = new \Whoops\Run;
-//$Whoops->pushHandler(new \Whoops\Handler\PlainTextHandler());
-//$Whoops->register();
-//
-//$Factory = new Factory();
 
-//$Benchmark->printBenchmark('Bootstrap');
+$Whoops = new \Whoops\Run;
+$Whoops->pushHandler(new \Whoops\Handler\PlainTextHandler());
+$Whoops->register();
+
+$Factory = new Factory();
+
+$Benchmark->printBenchmark('Bootstrap');
 
 //// #####################################################################################################################
 //$Benchmark = new Benchmark();

@@ -1,0 +1,12 @@
+Local:
+    Host:
+        - 127.0.0.1
+        - 192.168.1.37
+    Location:
+        - /Environment/Local/Cache.yaml
+        - /Environment/Local/Database.yaml
+
+Development:
+    Host:
+        - 192.168.200.100
+    Location: /Environment/Development
