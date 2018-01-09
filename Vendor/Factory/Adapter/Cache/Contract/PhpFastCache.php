@@ -6,13 +6,12 @@ namespace PRECAST\Vendor\Factory\Adapter\Cache\Contract;
 use phpFastCache\CacheManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Helper\Psr16Adapter;
-use PRECAST\Vendor\Factory\Contract\CacheInterface;
 
 /**
  * Class PhpFastCache
  * @package PRECAST\Vendor\Factory\Adapter
  */
-abstract class PhpFastCache implements CacheInterface
+abstract class PhpFastCache implements RootCacheInterface
 {
     /** @var null|\phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface $ExtendedInterface */
     private static $ExtendedInterface = null;
@@ -31,7 +30,7 @@ abstract class PhpFastCache implements CacheInterface
     /**
      * @inheritdoc
      */
-    public function set($Key, $Value, $Timeout = null, $Region = 'Generic'): CacheInterface
+    public function set($Key, $Value, $Timeout = null, $Region = 'Generic'): RootCacheInterface
     {
         $Cache = $this->useDriver(true);
         try {
@@ -99,7 +98,7 @@ abstract class PhpFastCache implements CacheInterface
     /**
      * @inheritdoc
      */
-    public function delete($Key, $Region = 'Generic'): CacheInterface
+    public function delete($Key, $Region = 'Generic'): RootCacheInterface
     {
         $this->useDriver()->delete($this->buildKey($Key, $Region));
         return $this;
@@ -107,10 +106,10 @@ abstract class PhpFastCache implements CacheInterface
 
     /**
      * @param string $Region
-     * @return CacheInterface
+     * @return RootCacheInterface
      * @throws \Exception
      */
-    public function clearRegion($Region = 'Generic'): CacheInterface
+    public function clearRegion($Region = 'Generic'): RootCacheInterface
     {
         $Cache = $this->useDriver(true);
         try {
@@ -123,7 +122,7 @@ abstract class PhpFastCache implements CacheInterface
 
     /**
      * @inheritdoc
-     * @return CacheInterface
+     * @return RootCacheInterface
      */
     public function clear()
     {

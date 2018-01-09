@@ -3,9 +3,9 @@
 namespace PRECAST\Facade;
 
 use PRECAST\Vendor\Factory;
+use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
 use PRECAST\Vendor\Factory\Adapter\File\Contract\TwigFileInterface;
-use PRECAST\Vendor\Factory\Contract\TemplateInterface;
-use PRECAST\Vendor\Factory\FallbackAdapterInterface;
+use PRECAST\Vendor\Factory\Adapter\Template\Contract\RootTemplateInterface;
 
 /**
  * Class Template
@@ -23,17 +23,17 @@ class Template
         switch (pathinfo($FileLocation, PATHINFO_EXTENSION)) {
             case 'twig':
                 return $Factory->createAdapter(
-                    TemplateInterface::class,
+                    RootTemplateInterface::class,
                     TwigFileInterface::class
                 );
             case 'tpl':
                 return $Factory->createAdapter(
-                    TemplateInterface::class
+                    RootTemplateInterface::class
                 );
             default:
                 return $Factory->createAdapter(
-                    TemplateInterface::class,
-                    FallbackAdapterInterface::class
+                    RootTemplateInterface::class,
+                    RootFallbackInterface::class
                 );
         }
     }

@@ -3,8 +3,8 @@
 namespace PRECAST;
 
 use PHPUnit\Framework\TestCase;
+use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
 use PRECAST\Vendor\Factory\AdapterInterface;
-use PRECAST\Vendor\Factory\Contract\CacheInterface;
 use PRECAST\Vendor\Factory\FactoryInterface;
 
 /**
@@ -14,9 +14,9 @@ use PRECAST\Vendor\Factory\FactoryInterface;
 class TestHelper extends TestCase
 {
     /**
-     * @param CacheInterface $MockUp
+     * @param RootCacheInterface $MockUp
      */
-    protected function CacheInterface(CacheInterface $MockUp)
+    protected function CacheInterface(RootCacheInterface $MockUp)
     {
 
         $this->assertInstanceOf(AdapterInterface::class, $MockUp);

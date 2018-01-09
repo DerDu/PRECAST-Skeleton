@@ -3,14 +3,14 @@
 namespace PRECAST\Vendor\Factory\Adapter\Fallback;
 
 
-use PRECAST\Vendor\Factory\Contract\CacheInterface;
-use PRECAST\Vendor\Factory\FallbackAdapterInterface;
+use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
+use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
 
 /**
  * Class FallbackCache
  * @package PRECAST\Vendor\Factory\Adapter\Fallback
  */
-class FallbackCache implements CacheInterface, FallbackAdapterInterface
+class FallbackCache implements RootCacheInterface, RootFallbackInterface
 {
     /** @var array[][] $MemoryCache */
     private static $MemoryCache = [];
@@ -18,7 +18,7 @@ class FallbackCache implements CacheInterface, FallbackAdapterInterface
     /**
      * @inheritdoc
      */
-    public function set($Key, $Value, $Timeout = null, $Region = ''): CacheInterface
+    public function set($Key, $Value, $Timeout = null, $Region = ''): RootCacheInterface
     {
         self::$MemoryCache[$this->buildRegion($Region)][$this->buildKey($Key, $Region)] = [
             'TTL' => time() + $Timeout,
@@ -64,9 +64,9 @@ class FallbackCache implements CacheInterface, FallbackAdapterInterface
 
     /**
      * @inheritdoc
-     * @return CacheInterface
+     * @return RootCacheInterface
      */
-    public function delete($Key, $Region = ''): CacheInterface
+    public function delete($Key, $Region = ''): RootCacheInterface
     {
         unset(self::$MemoryCache[$this->buildRegion($Region)][$this->buildKey($Key, $Region)]);
         return $this;
@@ -74,9 +74,9 @@ class FallbackCache implements CacheInterface, FallbackAdapterInterface
 
     /**
      * @param string $Region
-     * @return CacheInterface
+     * @return RootCacheInterface
      */
-    public function clearRegion($Region = ''): CacheInterface
+    public function clearRegion($Region = ''): RootCacheInterface
     {
         unset(self::$MemoryCache[$this->buildRegion($Region)]);
         return $this;
@@ -85,7 +85,7 @@ class FallbackCache implements CacheInterface, FallbackAdapterInterface
     /**
      * @inheritdoc
      */
-    public function clear(): CacheInterface
+    public function clear(): RootCacheInterface
     {
         self::$MemoryCache = [];
         return $this;

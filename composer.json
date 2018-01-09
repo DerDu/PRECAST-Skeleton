@@ -10,8 +10,19 @@
     }
   ],
   "config": {
-    "vendor-dir": "Vendor/Repository"
+    "vendor-dir": "Vendor/Repository",
+    "optimize-autoloader": true,
+    "classmap-authoritative": false
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packagist.org"
+    },
+    {
+      "packagist": false
+    }
+  ],
   "require": {
     "php": "~7.1",
     "twbs/bootstrap": "~v4.0.0-beta",
@@ -22,7 +33,6 @@
     "laravel/framework": "~v5.5",
     "phpfastcache/phpfastcache": "~6.0",
     "filp/whoops": "~2.1",
-
     "phpunit/phpunit": "~6.5",
     "phpunit/dbunit": "~3.0"
   },

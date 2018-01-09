@@ -2,12 +2,12 @@
 
 namespace PRECAST\Vendor;
 
+use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
 use PRECAST\Vendor\Factory\Adapter\Cache\FileCache;
+use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
 use PRECAST\Vendor\Factory\Adapter\Fallback\FallbackCache;
 use PRECAST\Vendor\Factory\AdapterInterface;
-use PRECAST\Vendor\Factory\Contract\CacheInterface;
 use PRECAST\Vendor\Factory\FactoryInterface;
-use PRECAST\Vendor\Factory\FallbackAdapterInterface;
 
 /**
  * Class Factory
@@ -15,23 +15,23 @@ use PRECAST\Vendor\Factory\FallbackAdapterInterface;
  */
 class Factory
 {
+    /** @var null|RootCacheInterface */
+    private static $CacheAdapter = null;
     /** @var string $AdapterDirectory */
     private $AdapterDirectory = 'Vendor/Factory/Adapter';
     /** @var array $FallbackAdapters */
     private $FallbackAdapters = [];
     /** @var array $Adapters */
     private $Adapters = [];
-    /** @var null|CacheInterface */
-    private static $CacheAdapter = null;
 
     /**
      * Factory constructor.
-     * @param null|CacheInterface $CacheAdapter
+     * @param null|RootCacheInterface $CacheAdapter
      */
-    public function __construct(CacheInterface $CacheAdapter = null)
+    public function __construct(RootCacheInterface $CacheAdapter = null)
     {
         if ($CacheAdapter === null) {
-            self::$CacheAdapter = new FileCache();
+            self::$CacheAdapter = new FallbackCache();
         } else {
             self::$CacheAdapter = $CacheAdapter;
         }
@@ -43,8 +43,8 @@ class Factory
      */
     private function loadAvailableAdapter()
     {
-        $this->Adapters = self::$CacheAdapter->get(__METHOD__.'#Adapters');
-        $this->FallbackAdapters = self::$CacheAdapter->get(__METHOD__.'#FallbackAdapters');
+        $this->Adapters = self::$CacheAdapter->get(__METHOD__ . '#Adapters');
+        $this->FallbackAdapters = self::$CacheAdapter->get(__METHOD__ . '#FallbackAdapters');
 
         if (empty($this->Adapters)) {
             $RDI = new \RecursiveDirectoryIterator(
@@ -69,13 +69,15 @@ class Factory
                 );
                 $Reflection = new \ReflectionClass($Class);
 
-                if ($Reflection->implementsInterface(FallbackAdapterInterface::class)) {
-                    $this->FallbackAdapters[$Class] = $Reflection->getInterfaceNames();
-                    sort($this->FallbackAdapters[$Class]);
-                } else {
-                    if ($Reflection->implementsInterface(AdapterInterface::class)) {
-                        $this->Adapters[$Class] = $Reflection->getInterfaceNames();
-                        sort($this->Adapters[$Class]);
+                if( !$Reflection->isInterface() ) {
+                    if ($Reflection->implementsInterface(RootFallbackInterface::class)) {
+                        $this->FallbackAdapters[$Class] = $Reflection->getInterfaceNames();
+                        sort($this->FallbackAdapters[$Class]);
+                    } else {
+                        if ($Reflection->implementsInterface(AdapterInterface::class)) {
+                            $this->Adapters[$Class] = $Reflection->getInterfaceNames();
+                            sort($this->Adapters[$Class]);
+                        }
                     }
                 }
             }
@@ -83,8 +85,8 @@ class Factory
             ksort($this->Adapters);
             ksort($this->FallbackAdapters);
 
-            self::$CacheAdapter->set(__METHOD__.'#Adapters', $this->Adapters, 10);
-            self::$CacheAdapter->set(__METHOD__.'#FallbackAdapters', $this->FallbackAdapters, 10);
+            self::$CacheAdapter->set(__METHOD__ . '#Adapters', $this->Adapters, 10);
+            self::$CacheAdapter->set(__METHOD__ . '#FallbackAdapters', $this->FallbackAdapters, 10);
         }
     }
 
@@ -143,5 +145,21 @@ class Factory
     {
         $Reflection = new \ReflectionClass($Interface);
         return $Reflection->implementsInterface(FactoryInterface::class);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFallbackAdapters(): array
+    {
+        return array_keys($this->FallbackAdapters);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdapters(): array
+    {
+        return array_keys($this->Adapters);
     }
 }

@@ -5,8 +5,9 @@ namespace PRECAST\Facade;
 use PRECAST\Vendor\Factory;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\FileCacheInterface;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\MemcachedCacheInterface;
-use PRECAST\Vendor\Factory\Contract\CacheInterface;
-use PRECAST\Vendor\Factory\FallbackAdapterInterface;
+use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
+use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
+use PRECAST\Vendor\Factory\AdapterInterface;
 
 /**
  * Class Cache
@@ -20,7 +21,7 @@ class Cache
 
     /**
      * @param int $Type
-     * @return Factory\AdapterInterface
+     * @return AdapterInterface
      */
     public static function createInstance(int $Type = Cache::TYPE_MEMORY)
     {
@@ -29,23 +30,23 @@ class Cache
         switch ($Type) {
             case self::TYPE_MEMORY:
                 return $Factory->createAdapter(
-                    CacheInterface::class,
-                    FallbackAdapterInterface::class
+                    RootCacheInterface::class,
+                    RootFallbackInterface::class
                 );
             case self::TYPE_FILES:
                 return $Factory->createAdapter(
-                    CacheInterface::class,
+                    RootCacheInterface::class,
                     FileCacheInterface::class
                 );
             case self::TYPE_MEMCACHED:
                 return $Factory->createAdapter(
-                    CacheInterface::class,
+                    RootCacheInterface::class,
                     MemcachedCacheInterface::class
                 );
             default:
                 return $Factory->createAdapter(
-                    CacheInterface::class,
-                    FallbackAdapterInterface::class
+                    RootCacheInterface::class,
+                    RootFallbackInterface::class
                 );
         }
     }

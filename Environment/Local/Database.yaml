@@ -1,0 +1,15 @@
+Database:
+    ConnectionName1:
+        Driver: mysql
+        Host: 127.0.0.1
+        Port: 3306
+        Username: root
+        Password: sphere
+        Database: Go1
+    ConnectionName2:
+        Driver: mysql
+        Host: 127.0.0.1
+        Port: 3306
+        Username: root
+        Password: sphere
+        Database: Go2

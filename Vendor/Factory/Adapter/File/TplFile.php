@@ -4,19 +4,19 @@ namespace PRECAST\Vendor\Factory\Adapter\File;
 
 
 use PRECAST\Vendor\Factory\Adapter\File\Contract\AbstractRootFile;
-use PRECAST\Vendor\Factory\Adapter\File\Contract\TwigFileInterface;
+use PRECAST\Vendor\Factory\Adapter\File\Contract\TplFileInterface;
 use PRECAST\Vendor\Factory\AdapterInterface;
 
 /**
- * Class TwigFile
+ * Class TplFile
  * @package PRECAST\Vendor\Factory\Adapter\File
  */
-class TwigFile extends AbstractRootFile implements AdapterInterface, TwigFileInterface
+class TplFile extends AbstractRootFile implements AdapterInterface, TplFileInterface
 {
     /**
      * @inheritDoc
      */
-    public function readFile(): TwigFileInterface
+    public function readFile(): TplFileInterface
     {
         parent::readFile();
         return $this;
@@ -25,9 +25,11 @@ class TwigFile extends AbstractRootFile implements AdapterInterface, TwigFileInt
     /**
      * @inheritDoc
      */
-    public function writeFile(): TwigFileInterface
+    public function writeFile(): TplFileInterface
     {
         parent::writeFile();
         return $this;
     }
+
+
 }

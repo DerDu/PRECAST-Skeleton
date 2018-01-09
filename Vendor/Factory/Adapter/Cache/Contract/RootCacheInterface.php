@@ -1,16 +1,16 @@
 <?php
 
-namespace PRECAST\Vendor\Factory\Contract;
+namespace PRECAST\Vendor\Factory\Adapter\Cache\Contract;
 
 
 use PRECAST\Vendor\Factory\FactoryInterface;
 
 /**
- * Interface CacheInterface
+ * Interface RootCacheInterface
  * @see http://www.php-fig.org/psr/psr-16/
- * @package PRECAST\Vendor\Factory\Contract
+ * @package PRECAST\Vendor\Factory\Adapter\Cache\Contract
  */
-interface CacheInterface extends FactoryInterface
+interface RootCacheInterface extends FactoryInterface
 {
     /**
      * Fetches a value from the cache.
