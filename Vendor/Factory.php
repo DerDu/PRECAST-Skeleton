@@ -3,9 +3,8 @@
 namespace PRECAST\Vendor;
 
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
-use PRECAST\Vendor\Factory\Adapter\Cache\FileCache;
+use PRECAST\Vendor\Factory\Adapter\Cache\MemoryCache;
 use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
-use PRECAST\Vendor\Factory\Adapter\Fallback\FallbackCache;
 use PRECAST\Vendor\Factory\AdapterInterface;
 use PRECAST\Vendor\Factory\FactoryInterface;
 
@@ -31,7 +30,7 @@ class Factory
     public function __construct(RootCacheInterface $CacheAdapter = null)
     {
         if ($CacheAdapter === null) {
-            self::$CacheAdapter = new FallbackCache();
+            self::$CacheAdapter = new MemoryCache();
         } else {
             self::$CacheAdapter = $CacheAdapter;
         }
@@ -69,7 +68,7 @@ class Factory
                 );
                 $Reflection = new \ReflectionClass($Class);
 
-                if( !$Reflection->isInterface() ) {
+                if (!$Reflection->isInterface()) {
                     if ($Reflection->implementsInterface(RootFallbackInterface::class)) {
                         $this->FallbackAdapters[$Class] = $Reflection->getInterfaceNames();
                         sort($this->FallbackAdapters[$Class]);
@@ -92,10 +91,14 @@ class Factory
 
     /**
      * @param string[] ...$factoryInterfaces
-     * @return AdapterInterface
+     * @return null|AdapterInterface
+     * @throws \Exception
      */
     public function createAdapter(string... $factoryInterfaces)
     {
+        if (empty($factoryInterfaces)) {
+            throw new \Exception( 'No Factory Interface given' );
+        }
         $Adapter = $this->findAdapter($factoryInterfaces);
         return new $Adapter;
     }

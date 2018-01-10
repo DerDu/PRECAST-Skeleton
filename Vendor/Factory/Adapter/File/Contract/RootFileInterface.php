@@ -5,6 +5,10 @@ namespace PRECAST\Vendor\Factory\Adapter\File\Contract;
 
 use PRECAST\Vendor\Factory\FactoryInterface;
 
+/**
+ * Interface RootFileInterface
+ * @package PRECAST\Vendor\Factory\Adapter\File\Contract
+ */
 interface RootFileInterface extends FactoryInterface
 {
     /**

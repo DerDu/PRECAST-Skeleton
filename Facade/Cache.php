@@ -5,6 +5,7 @@ namespace PRECAST\Facade;
 use PRECAST\Vendor\Factory;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\FileCacheInterface;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\MemcachedCacheInterface;
+use PRECAST\Vendor\Factory\Adapter\Cache\Contract\MemoryCacheInterface;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
 use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
 use PRECAST\Vendor\Factory\AdapterInterface;
@@ -31,7 +32,7 @@ class Cache
             case self::TYPE_MEMORY:
                 return $Factory->createAdapter(
                     RootCacheInterface::class,
-                    RootFallbackInterface::class
+                    MemoryCacheInterface::class
                 );
             case self::TYPE_FILES:
                 return $Factory->createAdapter(

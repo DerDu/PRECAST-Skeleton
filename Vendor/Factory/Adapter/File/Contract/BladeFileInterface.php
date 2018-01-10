@@ -3,10 +3,10 @@
 namespace PRECAST\Vendor\Factory\Adapter\File\Contract;
 
 /**
- * Interface TwigFileInterface
+ * Interface BladeFileInterface
  * @package PRECAST\Vendor\Factory\Adapter\File\Contract
  */
-interface TwigFileInterface extends RootFileInterface
+interface BladeFileInterface extends RootFileInterface
 {
 
 }

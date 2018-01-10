@@ -11,14 +11,14 @@ use PRECAST\Vendor\Factory\Adapter\File\Contract\RootFileInterface;
  * Class FallbackFile
  * @package PRECAST\Vendor\Factory\Adapter\Fallback
  */
-class FallbackFile extends AbstractRootFile implements RootFallbackInterface
+class FallbackFile extends AbstractRootFile implements RootFileInterface, RootFallbackInterface
 {
     /**
      * @inheritDoc
      */
     public function readFile(): RootFileInterface
     {
-        // TODO: Implement readFile() method.
+        parent::readFile();
         return $this;
     }
 
@@ -27,7 +27,7 @@ class FallbackFile extends AbstractRootFile implements RootFallbackInterface
      */
     public function writeFile(): RootFileInterface
     {
-        // TODO: Implement writeFile() method.
+        parent::writeFile();
         return $this;
     }
 

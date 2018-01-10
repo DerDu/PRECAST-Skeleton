@@ -11,7 +11,7 @@ use phpFastCache\Helper\Psr16Adapter;
  * Class PhpFastCache
  * @package PRECAST\Vendor\Factory\Adapter
  */
-abstract class PhpFastCache implements RootCacheInterface
+abstract class AbstractPhpFastCache implements RootCacheInterface
 {
     /** @var null|\phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface $ExtendedInterface */
     private static $ExtendedInterface = null;
@@ -167,9 +167,9 @@ abstract class PhpFastCache implements RootCacheInterface
 
     /**
      * @param string $Driver
-     * @return PhpFastCache
+     * @return AbstractPhpFastCache
      */
-    protected function setDriver(string $Driver): PhpFastCache
+    protected function setDriver(string $Driver): AbstractPhpFastCache
     {
         $this->Driver = $Driver;
         return $this;

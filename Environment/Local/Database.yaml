@@ -1,15 +1,31 @@
 Database:
-    ConnectionName1:
-        Driver: mysql
-        Host: 127.0.0.1
-        Port: 3306
-        Username: root
-        Password: sphere
-        Database: Go1
-    ConnectionName2:
-        Driver: mysql
-        Host: 127.0.0.1
-        Port: 3306
-        Username: root
-        Password: sphere
-        Database: Go2
+    Read:
+        ConnectionName1:
+            Driver: mysql
+            Host: 127.0.0.1
+            Port: 3306
+            Username: root
+            Password: sphere
+            Database: Go1
+            Charset: utf8mb4
+            Collation: utf8mb4_unicode_ci
+    Write:
+        ConnectionName1:
+            Driver: mysql
+            Host: 127.0.0.1
+            Port: 3306
+            Username: root
+            Password: sphere
+            Database: Go1
+            Charset: utf8mb4
+            Collation: utf8mb4_unicode_ci
+    Both:
+        ConnectionName2:
+            Driver: mysql
+            Host: 127.0.0.1
+            Port: 3306
+            Username: root
+            Password: sphere
+            Database: Go2
+            Charset: utf8mb4
+            Collation: utf8mb4_unicode_ci

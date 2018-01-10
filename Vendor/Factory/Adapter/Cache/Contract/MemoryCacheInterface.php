@@ -3,10 +3,10 @@
 namespace PRECAST\Vendor\Factory\Adapter\Cache\Contract;
 
 /**
- * Interface MemcachedCacheInterface
+ * Interface MemoryCacheInterface
  * @package PRECAST\Vendor\Factory\Adapter\Cache\Contract
  */
-interface MemcachedCacheInterface extends RootCacheInterface
+interface MemoryCacheInterface extends RootCacheInterface
 {
 
 }

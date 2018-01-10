@@ -4,6 +4,8 @@ declare(strict_types=1);
 use PRECAST\Benchmark;
 use PRECAST\Environment\Environment;
 use PRECAST\Facade\Cache;
+use PRECAST\Facade\Database;
+use PRECAST\Facade\File;
 use PRECAST\Facade\Template;
 use PRECAST\Vendor\Factory;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
@@ -50,7 +52,12 @@ $Benchmark->printBenchmark('Setup Application');
 // FACADE TEST
 // #####################################################################################################################
 $FacadeBenchmark = new Benchmark();
-$FacadeBenchmark->disableOutput();
+//$FacadeBenchmark->disableOutput();
+
+/**
+ * Template
+ */
+Benchmark::Log('Template');
 
 $Adapter = Template::createInstance('Test.twig');
 $FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
@@ -58,8 +65,19 @@ $FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
 $Adapter = Template::createInstance('Test.tpl');
 $FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
 
-$Adapter = Template::createInstance('Test.something');
+$Adapter = Template::createInstance('Test.blade');
 $FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = Template::createInstance('Test.blade.php', Template::TYPE_BLADE );
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = Template::createInstance('-1');
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+/**
+ * Cache
+ */
+Benchmark::Log('Cache');
 
 /** @var RootCacheInterface $Adapter */
 $Adapter = Cache::createInstance(Cache::TYPE_MEMORY);
@@ -76,8 +94,48 @@ $Adapter = Cache::createInstance(Cache::TYPE_MEMCACHED);
 $FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
 //$Adapter->set('Test3', 'Value3', 100);
 //var_dump($Adapter->get('Test3'));
-$FacadeBenchmark->enableOutput();
+$Adapter = Cache::createInstance(-1);
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
 
+/**
+ * File
+ */
+Benchmark::Log('File');
+
+$Adapter = File::createInstance('Test.yaml');
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = File::createInstance('Test.twig');
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = File::createInstance('Test.tpl');
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = File::createInstance('Test.blade');
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = File::createInstance('Test.blade.php', File::TYPE_BLADE );
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = File::createInstance('-1');
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+/**
+ * Database
+ */
+Benchmark::Log('Database');
+
+$Adapter = Database::createInstance( Database::TYPE_DOCTRINE );
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = Database::createInstance( Database::TYPE_ELOQUENT );
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+$Adapter = Database::createInstance( -1 );
+$FacadeBenchmark->printBenchmark(get_class($Adapter) . ' Facade');
+
+
+//$FacadeBenchmark->enableOutput();
 // #####################################################################################################################
 // EXIT
 // #####################################################################################################################

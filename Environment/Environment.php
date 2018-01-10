@@ -8,8 +8,11 @@ use PRECAST\Facade\File;
 use PRECAST\Vendor\Factory\Adapter\File\Contract\YamlFileInterface;
 use PRECAST\Vendor\Factory\Adapter\File\YamlFile;
 use PRECAST\Vendor\Factory\AdapterInterface;
-use PRECAST\Vendor\Factory\FactoryInterface;
 
+/**
+ * Class Environment
+ * @package PRECAST\Environment
+ */
 class Environment
 {
     /** @var array $Configuration */
@@ -60,6 +63,12 @@ class Environment
                     self::$Configuration = array_merge(self::$Configuration, $Adapter->getFileContent());
                 }
             }
+        }
+
+        if (empty(self::$Configuration)) {
+            throw new \Exception(
+                'No Environment for ' . $EnvironmentHostName . ' [' . implode(', ', $EnvironmentHostIp) . ']'
+            );
         }
     }
 

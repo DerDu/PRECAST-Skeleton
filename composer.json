@@ -38,9 +38,11 @@
   },
   "autoload": {
     "psr-4": {
+      "PRECAST\\Application\\": "Application",
       "PRECAST\\Environment\\": "Environment",
-      "PRECAST\\Vendor\\": "Vendor",
-      "PRECAST\\Facade\\": "Facade"
+      "PRECAST\\Facade\\": "Facade",
+      "PRECAST\\Storage\\": "Storage",
+      "PRECAST\\Vendor\\": "Vendor"
     }
   },
   "autoload-dev": {
