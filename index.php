@@ -28,7 +28,8 @@ require_once __DIR__ . DIRECTORY_SEPARATOR
 // #####################################################################################################################
 // Setup/WarmUp Error Handler
 $Whoops = new \Whoops\Run;
-$Whoops->pushHandler(new \Whoops\Handler\PlainTextHandler());
+//$Whoops->pushHandler(new \Whoops\Handler\PlainTextHandler());
+$Whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler());
 $Whoops->register();
 // #####################################################################################################################
 
@@ -38,12 +39,13 @@ $Factory = new Factory();
 var_dump($Factory->getAdapters());
 var_dump($Factory->getFallbackAdapters());
 
-var_dump(
-    $Factory->createAdapter(
-        Factory\Adapter\Fallback\Contract\RootFallbackInterface::class,
-        Factory\Adapter\Fallback\Contract\RootApiGeneratorInterface::class
-    )
-);
+///** @var Factory\Adapter\Fallback\FallbackApiGenerator $Doc */
+//$Doc = $Factory->createAdapter(
+//    Factory\Adapter\Fallback\Contract\RootFallbackInterface::class,
+//    Factory\Adapter\Fallback\Contract\RootApiGeneratorInterface::class
+//);
+//
+//$Doc->generate();
 
 // #####################################################################################################################
 

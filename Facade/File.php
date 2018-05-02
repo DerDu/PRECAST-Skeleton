@@ -2,6 +2,8 @@
 
 namespace PRECAST\Facade;
 
+use PRECAST\Vendor\Exception\AdapterException;
+use PRECAST\Vendor\Exception\FactoryException;
 use PRECAST\Vendor\Factory;
 use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
 use PRECAST\Vendor\Factory\Adapter\File\Contract\BladeFileInterface;
@@ -29,6 +31,8 @@ class File
      * @param string $FileLocation
      * @param int $Type
      * @return AdapterInterface
+     * @throws AdapterException
+     * @throws FactoryException
      */
     public static function createInstance(string $FileLocation, int $Type = File::TYPE_AUTO)
     {

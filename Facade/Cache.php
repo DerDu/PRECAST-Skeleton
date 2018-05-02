@@ -2,6 +2,7 @@
 
 namespace PRECAST\Facade;
 
+use PRECAST\Vendor\Exception\AdapterException;
 use PRECAST\Vendor\Exception\FactoryException;
 use PRECAST\Vendor\Factory;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\FileCacheInterface;
@@ -28,6 +29,7 @@ class Cache
     /**
      * @param int $Type
      * @return AdapterInterface|RootCacheInterface
+     * @throws AdapterException
      * @throws FactoryException
      */
     public static function createInstance(int $Type = Cache::TYPE_MEMORY)

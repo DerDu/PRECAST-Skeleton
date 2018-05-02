@@ -15,6 +15,7 @@ class TestHelper extends TestCase
 {
     /**
      * @param RootCacheInterface $MockUp
+     * @throws \Exception
      */
     protected function CacheInterface(RootCacheInterface $MockUp)
     {

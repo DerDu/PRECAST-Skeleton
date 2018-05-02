@@ -2,6 +2,8 @@
 
 namespace PRECAST\Facade;
 
+use PRECAST\Vendor\Exception\AdapterException;
+use PRECAST\Vendor\Exception\FactoryException;
 use PRECAST\Vendor\Factory;
 use PRECAST\Vendor\Factory\Adapter\Database\Contract\DoctrineDatabaseInterface;
 use PRECAST\Vendor\Factory\Adapter\Database\Contract\EloquentDatabaseInterface;
@@ -22,6 +24,8 @@ class Database
     /**
      * @param int $Type
      * @return null|AdapterInterface
+     * @throws AdapterException
+     * @throws FactoryException
      */
     public static function createInstance(int $Type = Database::TYPE_DOCTRINE)
     {

@@ -14,6 +14,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 class YamlFile extends AbstractRootFile implements AdapterInterface, YamlFileInterface
 {
+    /** @noinspection PhpMissingParentCallCommonInspection */
+
     /**
      * @inheritDoc
      */
@@ -24,6 +26,8 @@ class YamlFile extends AbstractRootFile implements AdapterInterface, YamlFileInt
         );
         return $this;
     }
+
+    /** @noinspection PhpMissingParentCallCommonInspection */
 
     /**
      * @inheritDoc
@@ -42,6 +46,6 @@ class YamlFile extends AbstractRootFile implements AdapterInterface, YamlFileInt
      */
     public function getFileContent(): array
     {
-        return parent::getFileContent();
+        return (array)parent::getFileContent();
     }
 }

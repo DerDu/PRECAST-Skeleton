@@ -4,8 +4,11 @@ namespace PRECAST\Environment;
 
 
 use PRECAST\Benchmark;
+use PRECAST\Environment\Exception\EnvironmentException;
 use PRECAST\Facade\Cache;
 use PRECAST\Facade\File;
+use PRECAST\Vendor\Exception\AdapterException;
+use PRECAST\Vendor\Exception\FactoryException;
 use PRECAST\Vendor\Factory\Adapter\File\Contract\YamlFileInterface;
 use PRECAST\Vendor\Factory\Adapter\File\YamlFile;
 use PRECAST\Vendor\Factory\AdapterInterface;
@@ -21,29 +24,32 @@ class Environment
     /** @var array $Mapping */
     private static $Mapping = [];
     /** @var bool $hasEnvironment */
-    private $hasEnvironment = false;
+    public static $hasEnvironment = false;
 
     /**
      * @return bool
      */
-    private function isHasEnvironment(): bool
+    public function hasEnvironment(): bool
     {
-        return $this->hasEnvironment;
+        return self::$hasEnvironment;
     }
 
     /**
      * @param bool $hasEnvironment
      * @return Environment
      */
-    private function setHasEnvironment(bool $hasEnvironment): Environment
+    public function setHasEnvironment(bool $hasEnvironment): Environment
     {
-        $this->hasEnvironment = $hasEnvironment;
+        self::$hasEnvironment = $hasEnvironment;
         return $this;
     }
 
     /**
      * Environment constructor.
      * @param string $useEnvironment
+     * @throws EnvironmentException
+     * @throws AdapterException
+     * @throws FactoryException
      * @throws \Exception
      */
     public function __construct(string $useEnvironment = __DIR__ . DIRECTORY_SEPARATOR . 'Environment.yaml')
@@ -62,7 +68,7 @@ class Environment
             /** @var YamlFile $Adapter */
             $Adapter = File::createInstance($useEnvironment);
             if (!$Adapter instanceof YamlFileInterface) {
-                throw new \Exception('Environment ' . $useEnvironment . ' not supported');
+                throw new EnvironmentException('Environment ' . $useEnvironment . ' not supported');
             }
 
             $Adapter->readFile();
@@ -72,7 +78,12 @@ class Environment
 
             foreach ($Environments as $Environment => $Setup) {
 
-                $Hosts = (array)$Setup['Host'];
+                if (isset($Setup['Host'])) {
+                    $Hosts = (array)$Setup['Host'];
+                } else {
+                    $Hosts = [];
+                }
+
                 if (!empty(array_intersect($EnvironmentHostIp, $Hosts))) {
 
                     $this->setHasEnvironment(true);
@@ -83,7 +94,7 @@ class Environment
                         /** @var YamlFile $Adapter */
                         $Adapter = File::createInstance($Location);
                         if (!$Adapter instanceof YamlFileInterface) {
-                            throw new \Exception('Environment ' . $Location . ' not supported');
+                            throw new EnvironmentException('Environment ' . $Location . ' not supported');
                         }
 
                         $Adapter->readFile();
@@ -100,8 +111,8 @@ class Environment
             self::$Configuration = $Configuration;
         }
 
-        if (!$this->isHasEnvironment()) {
-            throw new \Exception(
+        if (!$this->hasEnvironment()) {
+            throw new EnvironmentException(
                 'No Environment for ' . $EnvironmentHostName . ' [' . implode(', ', $EnvironmentHostIp) . ']'
             );
         }

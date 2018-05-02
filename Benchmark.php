@@ -36,6 +36,9 @@ class Benchmark
         }
     }
 
+    /**
+     * @param string $Type
+     */
     private static function echoRuler($Type = '#')
     {
         echo PHP_EOL . str_repeat($Type, 80) . PHP_EOL;
