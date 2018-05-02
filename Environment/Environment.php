@@ -4,6 +4,7 @@ namespace PRECAST\Environment;
 
 
 use PRECAST\Benchmark;
+use PRECAST\Facade\Cache;
 use PRECAST\Facade\File;
 use PRECAST\Vendor\Factory\Adapter\File\Contract\YamlFileInterface;
 use PRECAST\Vendor\Factory\Adapter\File\YamlFile;
@@ -19,6 +20,26 @@ class Environment
     private static $Configuration = [];
     /** @var array $Mapping */
     private static $Mapping = [];
+    /** @var bool $hasEnvironment */
+    private $hasEnvironment = false;
+
+    /**
+     * @return bool
+     */
+    private function isHasEnvironment(): bool
+    {
+        return $this->hasEnvironment;
+    }
+
+    /**
+     * @param bool $hasEnvironment
+     * @return Environment
+     */
+    private function setHasEnvironment(bool $hasEnvironment): Environment
+    {
+        $this->hasEnvironment = $hasEnvironment;
+        return $this;
+    }
 
     /**
      * Environment constructor.
@@ -28,44 +49,58 @@ class Environment
     public function __construct(string $useEnvironment = __DIR__ . DIRECTORY_SEPARATOR . 'Environment.yaml')
     {
 
-        /** @var YamlFile $Adapter */
-        $Adapter = File::createInstance($useEnvironment);
-        if (!$Adapter instanceof YamlFileInterface) {
-            throw new \Exception('Environment ' . $useEnvironment . ' not supported');
-        }
-
-        $Adapter->readFile();
-        $Adapter->writeFile();
-
         $EnvironmentHostName = gethostname();
         $EnvironmentHostIp = gethostbynamel($EnvironmentHostName);
+        Benchmark::Log('Host-Name: ' . $EnvironmentHostName . ', Address-List: ' . implode(', ', $EnvironmentHostIp));
 
-        $Environments = $Adapter->getFileContent();
+        $Cache = Cache::createInstance(Cache::TYPE_FILES);
+        $Key = $EnvironmentHostName . '_' . implode($EnvironmentHostIp);
 
-        foreach ($Environments as $Environment => $Setup) {
+        $Configuration = $Cache->get($Key, []);
 
-            $Hosts = (array)$Setup['Host'];
-            if (!empty(array_intersect($EnvironmentHostIp, $Hosts))) {
+        if (empty($Configuration)) {
+            /** @var YamlFile $Adapter */
+            $Adapter = File::createInstance($useEnvironment);
+            if (!$Adapter instanceof YamlFileInterface) {
+                throw new \Exception('Environment ' . $useEnvironment . ' not supported');
+            }
 
-                Benchmark::Log('Environment: ' . $Environment);
+            $Adapter->readFile();
+            $Adapter->writeFile();
 
-                $Locations = (array)$Setup['Location'];
-                foreach ($Locations as $Location) {
-                    /** @var YamlFile $Adapter */
-                    $Adapter = File::createInstance($Location);
-                    if (!$Adapter instanceof YamlFileInterface) {
-                        throw new \Exception('Environment ' . $Location . ' not supported');
+            $Environments = $Adapter->getFileContent();
+
+            foreach ($Environments as $Environment => $Setup) {
+
+                $Hosts = (array)$Setup['Host'];
+                if (!empty(array_intersect($EnvironmentHostIp, $Hosts))) {
+
+                    $this->setHasEnvironment(true);
+                    Benchmark::Log('Environment: ' . $Environment);
+
+                    $Locations = (array)$Setup['Location'];
+                    foreach ($Locations as $Location) {
+                        /** @var YamlFile $Adapter */
+                        $Adapter = File::createInstance($Location);
+                        if (!$Adapter instanceof YamlFileInterface) {
+                            throw new \Exception('Environment ' . $Location . ' not supported');
+                        }
+
+                        $Adapter->readFile();
+                        $Adapter->writeFile();
+
+                        self::$Configuration = array_merge(self::$Configuration, $Adapter->getFileContent());
                     }
-
-                    $Adapter->readFile();
-                    $Adapter->writeFile();
-
-                    self::$Configuration = array_merge(self::$Configuration, $Adapter->getFileContent());
                 }
             }
+
+            $Cache->set($Key, self::$Configuration, 30);
+        } else {
+            $this->setHasEnvironment(true);
+            self::$Configuration = $Configuration;
         }
 
-        if (empty(self::$Configuration)) {
+        if (!$this->isHasEnvironment()) {
             throw new \Exception(
                 'No Environment for ' . $EnvironmentHostName . ' [' . implode(', ', $EnvironmentHostIp) . ']'
             );
@@ -87,8 +122,6 @@ class Environment
      */
     public static function configureAdapter(AdapterInterface $Adapter)
     {
-
-
         return $Adapter;
     }
 

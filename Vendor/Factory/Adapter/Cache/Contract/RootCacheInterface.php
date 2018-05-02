@@ -17,13 +17,14 @@ interface RootCacheInterface extends FactoryInterface
      *
      * @param string $Key The unique key of this item in the cache.
      * @param mixed $Default Default value to return if the key does not exist.
+     * @param string $Region Optional cache partition
      *
      * @return mixed The value of the item from the cache, or $Default in case of cache miss.
      *
      * @throws \Exception
      *   MUST be thrown if the $Key string is not a legal value.
      */
-    public function get($Key, $Default = null);
+    public function get($Key, $Default = null, $Region = '');
 
     /**
      * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
@@ -33,13 +34,14 @@ interface RootCacheInterface extends FactoryInterface
      * @param null|int|\DateInterval $TTL Optional. The TTL value of this item. If no value is sent and
      *                                      the driver supports TTL then the library may set a default value
      *                                      for it or let the driver take care of that.
+     * @param string $Region Optional cache partition
      *
      * @return bool True on success and false on failure.
      *
      * @throws \Exception
      *   MUST be thrown if the $Key string is not a legal value.
      */
-    public function set($Key, $Value, $TTL = null);
+    public function set($Key, $Value, $TTL = null, $Region = '');
 
     /**
      * Delete an item from the cache by its unique key.

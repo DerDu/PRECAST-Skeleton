@@ -3,6 +3,13 @@ Local:
         - 127.0.0.1
         - 192.168.100.128
         - 192.168.1.37
+        - 192.168.1.40
+    Location:
+        - Environment/Local/Cache.yaml
+        - Environment/Local/Database.yaml
+LocalVM:
+    Host:
+        - 127.0.1.1
     Location:
         - Environment/Local/Cache.yaml
         - Environment/Local/Database.yaml

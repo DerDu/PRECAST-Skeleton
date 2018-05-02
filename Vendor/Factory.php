@@ -2,7 +2,10 @@
 
 namespace PRECAST\Vendor;
 
+use PRECAST\Vendor\Exception\AdapterException;
+use PRECAST\Vendor\Exception\FactoryException;
 use PRECAST\Vendor\Factory\Adapter\Cache\Contract\RootCacheInterface;
+use PRECAST\Vendor\Factory\Adapter\Cache\FileCache;
 use PRECAST\Vendor\Factory\Adapter\Cache\MemoryCache;
 use PRECAST\Vendor\Factory\Adapter\Fallback\Contract\RootFallbackInterface;
 use PRECAST\Vendor\Factory\AdapterInterface;
@@ -26,24 +29,37 @@ class Factory
     /**
      * Factory constructor.
      * @param null|RootCacheInterface $CacheAdapter
+     * @throws FactoryException
      */
     public function __construct(RootCacheInterface $CacheAdapter = null)
     {
         if ($CacheAdapter === null) {
-            self::$CacheAdapter = new MemoryCache();
+            self::$CacheAdapter = new FileCache();
         } else {
             self::$CacheAdapter = $CacheAdapter;
         }
-        $this->loadAvailableAdapter();
+        try {
+            $this->loadAvailableAdapter();
+        } catch (\Throwable $throwable) {
+            throw new FactoryException($throwable->getMessage(), $throwable->getCode(), $throwable);
+        }
     }
 
     /**
-     *
+     * @throws FactoryException
      */
     private function loadAvailableAdapter()
     {
-        $this->Adapters = self::$CacheAdapter->get(__METHOD__ . '#Adapters');
-        $this->FallbackAdapters = self::$CacheAdapter->get(__METHOD__ . '#FallbackAdapters');
+        try {
+            $this->Adapters = self::$CacheAdapter->get(__METHOD__ . '#Adapters');
+        } catch (\Exception $exception) {
+            throw new FactoryException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+        try {
+            $this->FallbackAdapters = self::$CacheAdapter->get(__METHOD__ . '#FallbackAdapters');
+        } catch (\Exception $exception) {
+            throw new FactoryException($exception->getMessage(), $exception->getCode(), $exception);
+        }
 
         if (empty($this->Adapters)) {
             $RDI = new \RecursiveDirectoryIterator(
@@ -66,7 +82,11 @@ class Factory
                     $Item->getPath() . DIRECTORY_SEPARATOR .
                     basename($Item->getFilename(), '.php')
                 );
-                $Reflection = new \ReflectionClass($Class);
+                try {
+                    $Reflection = new \ReflectionClass($Class);
+                } catch (\ReflectionException $exception) {
+                    throw new FactoryException($exception->getMessage(), $exception->getCode(), $exception);
+                }
 
                 if (!$Reflection->isInterface()) {
                     if ($Reflection->implementsInterface(RootFallbackInterface::class)) {
@@ -84,20 +104,29 @@ class Factory
             ksort($this->Adapters);
             ksort($this->FallbackAdapters);
 
-            self::$CacheAdapter->set(__METHOD__ . '#Adapters', $this->Adapters, 10);
-            self::$CacheAdapter->set(__METHOD__ . '#FallbackAdapters', $this->FallbackAdapters, 10);
+            try {
+                self::$CacheAdapter->set(__METHOD__ . '#Adapters', $this->Adapters, 10);
+            } catch (\Exception $exception) {
+                throw new FactoryException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+            try {
+                self::$CacheAdapter->set(__METHOD__ . '#FallbackAdapters', $this->FallbackAdapters, 10);
+            } catch (\Exception $exception) {
+                throw new FactoryException($exception->getMessage(), $exception->getCode(), $exception);
+            }
         }
     }
 
     /**
      * @param string[] ...$factoryInterfaces
      * @return null|AdapterInterface
-     * @throws \Exception
+     * @throws FactoryException
+     * @throws AdapterException
      */
     public function createAdapter(string... $factoryInterfaces)
     {
         if (empty($factoryInterfaces)) {
-            throw new \Exception( 'No Factory Interface given' );
+            throw new FactoryException('No Factory Interface given');
         }
         $Adapter = $this->findAdapter($factoryInterfaces);
         return new $Adapter;
@@ -106,36 +135,58 @@ class Factory
     /**
      * @param  array $factoryInterfaces
      * @return null|string
-     * @throws \Exception
+     * @throws FactoryException
+     * @throws AdapterException
      */
     private function findAdapter(array $factoryInterfaces)
     {
         $this->validateFactoryInterfaces($factoryInterfaces);
 
-        foreach ($this->Adapters as $Adapter => $adapterInterfaces) {
-            if (count(array_intersect($adapterInterfaces, $factoryInterfaces)) == count($factoryInterfaces)) {
-                return $Adapter;
+        $Cache = new MemoryCache();
+
+        $Adapter = $Cache->get(implode($factoryInterfaces));
+        if (empty($Adapter)) {
+            foreach ($this->Adapters as $Adapter => $adapterInterfaces) {
+                if (count(array_intersect($adapterInterfaces, $factoryInterfaces)) == count($factoryInterfaces)) {
+                    $Cache->set(implode($factoryInterfaces), $Adapter, 30);
+                    return $Adapter;
+                }
             }
+        } else {
+            return $Adapter;
         }
 
-        foreach ($this->FallbackAdapters as $Adapter => $adapterInterfaces) {
-            if (count(array_intersect($adapterInterfaces, $factoryInterfaces)) == count($factoryInterfaces)) {
-                return $Adapter;
+        $Adapter = $Cache->get(implode($factoryInterfaces));
+        if (empty($Adapter)) {
+            foreach ($this->FallbackAdapters as $Adapter => $adapterInterfaces) {
+                if (count(array_intersect($adapterInterfaces, $factoryInterfaces)) == count($factoryInterfaces)) {
+                    $Cache->set(implode($factoryInterfaces), $Adapter, 30);
+                    return $Adapter;
+                }
             }
+        } else {
+            return $Adapter;
         }
 
-        throw new \Exception('No suitable Adapter found for ' . implode(', ', $factoryInterfaces));
+        throw new FactoryException('No suitable Adapter found for ' . implode(', ', $factoryInterfaces));
     }
 
     /**
      * @param array $factoryInterfaces
-     * @throws \Exception
+     * @throws FactoryException
+     * @throws AdapterException
      */
     private function validateFactoryInterfaces(array $factoryInterfaces)
     {
+        $Cache = new FileCache();
+        if (!empty($factoryInterface = $Cache->get(implode($factoryInterfaces), null, __METHOD__))) {
+            throw new FactoryException($factoryInterface . ' was not a Factory Interface');
+        }
+
         foreach ($factoryInterfaces as $factoryInterface) {
             if (!$this->isFactoryInterface($factoryInterface)) {
-                throw new \Exception($factoryInterface . ' is not a Factory Interface');
+                $Cache->set(implode($factoryInterfaces), $factoryInterface, 30, __METHOD__);
+                throw new FactoryException($factoryInterface . ' is not a Factory Interface');
             }
         }
     }
@@ -143,11 +194,23 @@ class Factory
     /**
      * @param string $Interface
      * @return bool
+     * @throws FactoryException
+     * @throws AdapterException
      */
     private function isFactoryInterface(string $Interface)
     {
-        $Reflection = new \ReflectionClass($Interface);
-        return $Reflection->implementsInterface(FactoryInterface::class);
+        $Cache = new FileCache();
+        $isFactoryInterface = $Cache->get($Interface, null, __METHOD__);
+        if (null === $isFactoryInterface) {
+            try {
+                $Reflection = new \ReflectionClass($Interface);
+            } catch (\ReflectionException $exception) {
+                throw new FactoryException($exception->getMessage(), $exception->getCode(), $exception);
+            }
+            $isFactoryInterface = $Reflection->implementsInterface(FactoryInterface::class);
+            $Cache->set($Interface, $isFactoryInterface, 30, __METHOD__);
+        }
+        return $isFactoryInterface;
     }
 
     /**

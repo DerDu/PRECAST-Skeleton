@@ -6,6 +6,7 @@ namespace PRECAST\Vendor\Factory\Adapter\Cache\Contract;
 use phpFastCache\CacheManager;
 use phpFastCache\Exceptions\phpFastCacheInvalidArgumentException;
 use phpFastCache\Helper\Psr16Adapter;
+use PRECAST\Vendor\Exception\AdapterException;
 
 /**
  * Class PhpFastCache
@@ -22,7 +23,7 @@ abstract class AbstractPhpFastCache implements RootCacheInterface
     /** @var array $Config */
     private $Config = [
         'ignoreSymfonyNotice' => true,
-        'fallback' => 'files',
+        'fallback' => false,
         'compress_data' => true,
         'preventCacheSlams' => true
     ];
@@ -45,7 +46,7 @@ abstract class AbstractPhpFastCache implements RootCacheInterface
             }
             $Cache->save($Item);
         } catch (phpFastCacheInvalidArgumentException $Exception) {
-            throw new \Exception($Exception->getMessage(), null, $Exception);
+            throw new AdapterException($Exception->getMessage(), null, $Exception);
         }
         return $this;
     }
@@ -53,19 +54,24 @@ abstract class AbstractPhpFastCache implements RootCacheInterface
     /**
      * @param bool $Extended false
      * @return \phpFastCache\Core\Pool\ExtendedCacheItemPoolInterface|Psr16Adapter
+     * @throws AdapterException
      */
-    private function useDriver($Extended = false)
+    protected function useDriver($Extended = false)
     {
-        if ($Extended) {
-            if (null === self::$ExtendedInterface) {
-                self::$ExtendedInterface = CacheManager::getInstance($this->Driver, $this->Config);
+        try {
+            if ($Extended) {
+                if (null === self::$ExtendedInterface) {
+                    self::$ExtendedInterface = CacheManager::getInstance($this->Driver, $this->Config);
+                }
+                return self::$ExtendedInterface;
             }
-            return self::$ExtendedInterface;
+            if (null === self::$SimpleInterface) {
+                self::$SimpleInterface = new Psr16Adapter($this->Driver, $this->Config);
+            }
+            return self::$SimpleInterface;
+        } catch (\Throwable $throwable) {
+            throw new AdapterException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
-        if (null === self::$SimpleInterface) {
-            self::$SimpleInterface = new Psr16Adapter($this->Driver, $this->Config);
-        }
-        return self::$SimpleInterface;
     }
 
     /**
@@ -112,11 +118,7 @@ abstract class AbstractPhpFastCache implements RootCacheInterface
     public function clearRegion($Region = 'Generic'): RootCacheInterface
     {
         $Cache = $this->useDriver(true);
-        try {
-            $Cache->deleteItemsByTag($this->buildRegion($Region));
-        } catch (phpFastCacheInvalidArgumentException $Exception) {
-            throw new \Exception($Exception->getMessage(), null, $Exception);
-        }
+        $Cache->deleteItemsByTag($this->buildRegion($Region));
         return $this;
     }
 
